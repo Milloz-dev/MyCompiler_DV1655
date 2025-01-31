@@ -2,6 +2,7 @@
 #include "parser.tab.h"  // Bison-generated header
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 %}
 
 /* (A) Lexical Analysis (Scanner) using Flex.
@@ -15,23 +16,62 @@
 /* Define tokens */
 DIGIT   [0-9]
 LETTER  [a-zA-Z]
-ID      {LETTER}({LETTER}|{DIGIT})*
+IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 NUMBER  {DIGIT}+
 
 %%
-"int"       { printf("Token: INT\n"); return INT; }
-"return"    { printf("Token: RETURN\n"); return RETURN; }
-"if"        { printf("Token: IF\n"); return IF; }
-"else"      { printf("Token: ELSE\n"); return ELSE; }
-"while"     { printf("Token: WHILE\n"); return WHILE; }
-{ID}        { printf("Token: ID (%s)\n", yytext); return ID; }
-{NUMBER}    { printf("Token: NUMBER (%s)\n", yytext); yylval = atoi(yytext); return NUMBER; }
-"("         { printf("Token: LPAREN\n"); return LPAREN; }
-")"         { printf("Token: RPAREN\n"); return RPAREN; }
-"{"         { printf("Token: LBRACE\n"); return LBRACE; }
-"}"         { printf("Token: RBRACE\n"); return RBRACE; }
-";"         { printf("Token: SEMICOLON\n"); return SEMICOLON; }
-[ \t\n]     ;  /* Ignore whitespace */
-.           { printf("Unexpected character: %s\n", yytext); }
+
+"class"     { return CLASS; }
+"public"    { return PUBLIC; }
+"static"    { return STATIC; }
+"void"      { return VOID; }
+"main"      { return MAIN; }
+"String"    { return STRING; }
+"int"       { return INT; }
+"boolean"   { return BOOLEAN; }
+"return"    { return RETURN; }
+"if"        { return IF; }
+"else"      { return ELSE; }
+"while"     { return WHILE; }
+"System.out.println" { return PRINTLN; }
+"this"      { return THIS; } 
+"new"       { return NEW; }
+"true"      { return TRUE; }
+"false"     { return FALSE; }
+
+"("           { return LPAREN; }
+")"           { return RPAREN; }
+"{"           { return LBRACE; }
+"}"           { return RBRACE; }
+"["           { return LBRACKET; }
+"]"           { return RBRACKET; }
+";"           { return SEMICOLON; }
+","           { return COMMA; }
+"."           { return DOT; }
+"="           { return ASSIGN; }
+"&&"          { return AND; }
+"||"          { return OR; }
+"=="          { return EQUAL; }
+"<"           { return LT; }
+">"           { return GT; }
+"+"           { return PLUS; }
+"-"           { return MINUS; }
+"*"           { return MULT; }
+"!"           { return NOT; }
+
+\"([^\"]|\\\")*\"  { return STRING; }
+
+[a-zA-Z][a-zA-Z0-9]* { return IDENTIFIER; }
+[0-9]+ { return NUMBER; }
+
+"//"[^'\n']*          { /* Ignore comments */ }
+[ \t\n\r]+ { /* Ignore spaces, tabs, and newlines */ }
+
+. { printf("Unexpected character: %s\n", yytext); return ERROR; }
 
 %%
+
+int main() {
+    yylex();
+    return 0;
+}

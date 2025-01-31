@@ -1,6 +1,9 @@
 %{
+#include "Node.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "parser.tab.h"
 extern int yylex();  // Lexical analyzer
 extern char *yytext;  // Declare yytext
 void yyerror(const char *s);  // Error handler
@@ -11,43 +14,270 @@ void yyerror(const char *s);  // Error handler
 //   -Validates the grammar based on the MiniJava EBNF.
 //   -Constructs an Abstract Syntax Tree (AST).
 
+%union {
+    char* sval;       // For IDENTIFIER, STRING
+    int ival;         // For NUMBER
+    struct Node* node; // For AST nodes
+}
 
-%token INT RETURN IF ELSE WHILE ID NUMBER LPAREN RPAREN LBRACE RBRACE SEMICOLON
 
+%token CLASS PUBLIC STATIC VOID MAIN INT BOOLEAN RETURN IF ELSE WHILE PRINTLN
+%token THIS NEW TRUE FALSE
+%token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET SEMICOLON COMMA DOT ASSIGN
+%token AND OR EQUAL LT GT PLUS MINUS MULT NOT
+
+%type <node> Goal MainClass StatementList Statement Expression MethodDeclaration
+%type <node> ParamList VarDeclaration Type
+%token <sval> IDENTIFIER STRING
+%token <ival> NUMBER
 %debug //remove when done
 
-%%
 
-program:
-    stmt_list
-    ;
-
-stmt_list:
-    stmt_list stmt
-    | stmt
-    ;
-
-stmt:
-    INT ID SEMICOLON { printf("Variable declaration\n"); }
-    | RETURN NUMBER SEMICOLON { printf("Return statement\n"); }
-    | IF LPAREN expr RPAREN stmt ELSE stmt { printf("If-Else statement\n"); }
-    | WHILE LPAREN expr RPAREN stmt { printf("While loop\n"); }
-    | LBRACE stmt_list RBRACE
-    ;
-
-expr:
-    ID { printf("Identifier: %s\n", yytext); }
-    | NUMBER { printf("Number: %s\n", yytext); }
-    ;
+%start Goal
 
 %%
+
+Goal:
+    MainClass
+    {
+        root = $1;  // Set the root of the AST to the MainClass node
+    }
+    ;
+
+MainClass:
+    CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN LBRACE Statement RBRACE RBRACE
+    {
+        $$ = new Node("MainClass", $2, yylineno);
+    };
+
+ClassDeclarations:
+    | ClassDeclarations ClassDeclaration
+    ;
+
+ClassDeclaration:
+    CLASS IDENTIFIER LBRACE VarDeclarations MethodDeclarations RBRACE
+    ;
+
+VarDeclarations:
+    | VarDeclarations VarDeclaration
+    ;
+
+VarDeclaration:
+    Type IDENTIFIER SEMICOLON
+    ;
+
+MethodDeclarations:
+    | MethodDeclarations MethodDeclaration
+    ;
+
+MethodDeclaration:
+    PUBLIC Type IDENTIFIER LPAREN ParamList RPAREN LBRACE VarDeclarations StatementList RETURN Expression SEMICOLON RBRACE
+    ;
+
+ParamList:
+    /* empty */
+{
+    $$ = nullptr;  // Default value for empty ParamList
+}
+| Type IDENTIFIER
+{
+    $$ = new Node("PARAM", *$2, yylineno);  // Create a new parameter node
+}
+
+Type:
+    INT { $$ = strdup("int"); }
+    | BOOLEAN { $$ = strdup("boolean"); }
+    ;
+
+| BOOLEAN
+{
+    $$ = new Node("BOOLEAN_TYPE", "boolean", yylineno);
+}
+| INT
+{
+    $$ = new Node("INT_TYPE", "int", yylineno);
+}
+| IDENTIFIER
+{
+    $$ = new Node("IDENTIFIER", *$1, yylineno);  // Handle custom type
+}
+
+StatementList:
+    /* empty */ 
+    {
+        $$ = nullptr;  // Empty statement list
+    }
+    | StatementList Statement
+    {
+        $$ = $1;
+        $$->add_child($2);  // Add the statement as a child
+    }
+    ;
+
+Statement:
+    LBRACE StatementList RBRACE
+    {
+        $$ = $2;  // StatementList is already of type Node*
+    }
+    | IF LPAREN Expression RPAREN Statement ELSE Statement
+    {
+        $$ = new Node("IF", "if", yylineno);
+        $$->add_child($3);  // Expression
+        $$->add_child($5);  // Statement
+        $$->add_child($7);  // Statement
+    }
+    | WHILE LPAREN Expression RPAREN Statement
+    {
+        $$ = new Node("WHILE", "while", yylineno);
+        $$->add_child($3);  // Expression
+        $$->add_child($5);  // Statement
+    }
+    | PRINTLN LPAREN Expression RPAREN SEMICOLON
+    {
+        $$ = new Node("PRINTLN", "println", yylineno);
+        $$->add_child($3);  // Expression
+    }
+    | IDENTIFIER ASSIGN Expression SEMICOLON
+    {
+        $$ = new Node("ASSIGN", "=", yylineno);
+        $$->add_child(new Node("IDENTIFIER", $1, yylineno));  // Identifier is string*
+        $$->add_child($3);  // Expression is Node*
+    }
+    | IDENTIFIER LBRACKET Expression RBRACKET ASSIGN Expression SEMICOLON
+    {
+        $$ = new Node("ARRAY_ASSIGN", "[]=", yylineno);
+        $$->add_child(new Node("IDENTIFIER", $1, yylineno));  // Array name
+        $$->add_child($3);  // Index expression
+        $$->add_child($5);  // Value to assign
+    }
+    ;
+
+Expression:
+    | Expression AND Expression
+    {
+        $$ = new Node("AND", "&&", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression OR Expression
+    {
+        $$ = new Node("OR", "||", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression LT Expression
+    {
+        $$ = new Node("LT", "<", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression GT Expression
+    {
+        $$ = new Node("GT", ">", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression EQUAL Expression
+    {
+        $$ = new Node("EQUAL", "==", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression PLUS Expression
+    {
+        $$ = new Node("PLUS", "+", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression MINUS Expression
+    {
+        $$ = new Node("MINUS", "-", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression MULT Expression
+    {
+        $$ = new Node("MULT", "*", yylineno);
+        $$->add_child($1);  // Left operand
+        $$->add_child($3);  // Right operand
+    }
+    | Expression LBRACKET Expression RBRACKET
+    {
+        $$ = new Node("ARRAY_ACCESS", "[]", yylineno);
+        $$->add_child($1);  // Array name
+        $$->add_child($3);  // Index expression
+    }
+    | Expression DOT IDENTIFIER LPAREN ArgList RPAREN
+    {
+        $$ = new Node("METHOD_CALL", ".", yylineno);
+        $$->add_child($1);  // Object
+        $$->add_child(new Node("IDENTIFIER", $3, yylineno));  // Method name
+        $$->add_child($3);  // Arguments for method call
+    }
+    | NUMBER
+    {
+        $$ = new Node("NUMBER", std::to_string($1), yylineno);
+    }
+    | TRUE
+    {
+        $$ = new Node("BOOLEAN", "true", yylineno);
+    }
+    | FALSE
+    {
+        $$ = new Node("BOOLEAN", "false", yylineno);
+    }
+    | IDENTIFIER
+    {
+        $$ = new Node("IDENTIFIER", $1, yylineno);
+    }
+    | THIS
+    {
+        $$ = new Node("THIS", "this", yylineno);
+    }
+    | NEW INT LBRACKET Expression RBRACKET
+    {
+        $$ = new Node("NEW_ARRAY", "int", yylineno);
+        $$->add_child($4);  // Array size
+    }
+    | NEW IDENTIFIER LPAREN RPAREN
+    {
+        $$ = new Node("NEW_OBJECT", "new", yylineno);
+        $$->add_child(new Node("IDENTIFIER", $2, yylineno));  // Class name
+    }
+    | NOT Expression
+    {
+        $$ = new Node("NOT", "!", yylineno);
+        $$->add_child($2);  // Expression after "!"
+    }
+    | LPAREN Expression RPAREN
+    {
+        $$ = $2;  // Parentheses just return the inner expression
+    }
+    ;
+
+ArgList:
+    | Expression
+    | ArgList COMMA Expression
+    ;
+
+%%
+
+Node* root = nullptr;  // Global root for AST
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Parse error: %s\n", s);
-    fprintf(stderr, "At token: %s\n", yytext);
+    fprintf(stderr, "Parse error: %s at token: %s\n", s, yytext);
 }
 
 int main() {
-    yyparse();
+    if (yyparse() == 0) {
+        printf("Parsing completed successfully!\n");
+        // Print the AST
+        if (root) {
+            root->print_tree();  // Print the AST
+            root->generate_tree();  // Generate a DOT file for visualization
+        }
+    } else {
+        printf("Parsing failed.\n");
+    }
     return 0;
 }
