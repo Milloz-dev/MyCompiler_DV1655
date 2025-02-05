@@ -1,0 +1,14 @@
+digraph {
+n0 [label="PROGRAM:PROGRAM"];
+n1 [label="MainClass:MainClass"];
+n2 [label="IDENTIFIER:Main"];
+n1 -> n2
+n3 [label="MainArgs:MainArgs"];
+n4 [label="IDENTIFIER:args"];
+n3 -> n4
+n1 -> n3
+n5 [label="StatementList:StatementList"];
+n6 [label="PRINTLN:println"];
+n7 [label="STRING_LITERAL:"Hello, MiniJava!""];
+n6 -> n7
+n5 -> n6

@@ -13,26 +13,29 @@ using namespace std;
 
 class Node {
 public:
-	int id, lineno;
-	string type, value;
-	list<Node*> children;
-	Node(string t, string v, int l) : type(t), value(v), lineno(l){}
-	Node()
-	{
-		type = "uninitialised";
-		value = "uninitialised"; }   // Bison needs this.
-  
-	void print_tree(int depth=0) {
-		for(int i=0; i<depth; i++)
-		cout << "  ";
-		cout << type << ":" << value << endl; //<< " @line: "<< lineno << endl;
-		for(auto i=children.begin(); i!=children.end(); i++)
-		(*i)->print_tree(depth+1);
-	}
+    std::string type;
+    std::string value;
+    int line_number;
+	int id;
+    std::vector<Node*> children;
+
+    Node(std::string t, std::string v, int ln) : type(t), value(v), line_number(ln) {}
+
+    void add_child(Node* child) {
+        children.push_back(child);
+    }
+
+    void print_tree(int indent = 0) {
+        for (int i = 0; i < indent; ++i) std::cout << "  ";
+        std::cout << type << ": " << value << " (Line: " << line_number << ")\n";
+        for (auto& child : children) {
+            child->print_tree(indent + 1);
+        }
+    }
   
 	void generate_tree() {
 		std::ofstream outStream;
-		char* filename = "tree.dot";
+		const char* filename = "tree.dot";
 	  	outStream.open(filename);
 
 		int count = 0;

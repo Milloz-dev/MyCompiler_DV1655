@@ -1,0 +1,104 @@
+/* New structure for expressions to remove ambiguities */
+
+%type <node> Expression PrimaryExpr PostfixChain PostfixOp
+
+Expression:
+    PrimaryExpr PostfixChain
+    {
+        /* Here you might combine the primary expression with its postfix chain.
+           For simplicity, assume PostfixChain returns an AST node that wraps the primary. */
+        if ($2)
+        {
+            /* Attach the primary expression as the left-most child of the postfix chain node */
+            $2->add_child($1);
+            $$ = $2;
+        }
+        else
+            $$ = $1;
+    }
+    ;
+
+/* Primary expressions: literals, identifiers, grouping, etc. */
+PrimaryExpr:
+      NUMBER    { $$ = new Node("NUMBER", std::to_string($1), yylineno); }
+    | IDENTIFIER { $$ = new Node("IDENTIFIER", $1, yylineno); }
+    | THIS      { $$ = new Node("THIS", "this", yylineno); }
+    | TRUE      { $$ = new Node("BOOLEAN", "true", yylineno); }
+    | FALSE     { $$ = new Node("BOOLEAN", "false", yylineno); }
+    | LPAREN Expression RPAREN { $$ = $2; }
+    | NEW INT LBRACKET Expression RBRACKET 
+                 { $$ = new Node("NEW_ARRAY", "int", yylineno); $$->add_child($4); }
+    | NEW IDENTIFIER LPAREN RPAREN 
+                 { $$ = new Node("NEW_OBJECT", "new", yylineno); $$->add_child(new Node("IDENTIFIER", $2, yylineno)); }
+    ;
+
+/* Postfix chain: zero or more postfix operators */
+PostfixChain:
+    /* empty */ { $$ = nullptr; }
+    | PostfixChain PostfixOp
+      {
+         /* Here, you might build a chain; for simplicity, assume $2 is a node for the postfix operator
+            and you attach it to the chain. */
+         if ($1 == nullptr)
+             $$ = $2;
+         else {
+             $1->add_child($2);
+             $$ = $1;
+         }
+      }
+    ;
+
+/* Postfix operator: method call or array access */
+PostfixOp:
+      DOT IDENTIFIER LPAREN ArgList RPAREN 
+      {
+         $$ = new Node("METHOD_CALL", ".", yylineno);
+         $$->add_child(new Node("IDENTIFIER", $2, yylineno));
+         $$->add_child($4);
+      }
+    | LBRACKET Expression RBRACKET
+      {
+         $$ = new Node("ARRAY_ACCESS", "[]", yylineno);
+         $$->add_child($2);
+      }
+    ;
+
+
+
+"class"     { return CLASS; }
+"public"    { return PUBLIC; }
+"static"    { return STATIC; }
+"void"      { return VOID; }
+"main"      { return MAIN; }
+"String"    { return STRING; }
+"int"       { return INT; }
+"boolean"   { return BOOLEAN; }
+"return"    { return RETURN; }
+"if"        { return IF; }
+"else"      { return ELSE; }
+"while"     { return WHILE; }
+"System.out.println" { return PRINTLN; }
+"this"      { return THIS; } 
+"new"       { return NEW; }
+"true"      { return TRUE; }
+"false"     { return FALSE; }
+
+"("           { return LPAREN; }
+")"           { return RPAREN; }
+"{"           { return LBRACE; }
+"}"           { return RBRACE; }
+"["           { return LBRACKET; }
+"]"           { return RBRACKET; }
+";"           { return SEMICOLON; }
+","           { return COMMA; }
+"."           { return DOT; }
+"="           { return ASSIGN; }
+"&&"          { return AND; }
+"||"          { return OR; }
+"=="          { return EQUAL; }
+"<"           { return LT; }
+">"           { return GT; }
+"+"           { return PLUS; }
+"-"           { return MINUS; }
+"*"           { return MULT; }
+"!"           { return NOT; }

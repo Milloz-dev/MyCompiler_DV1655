@@ -4,9 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "parser.tab.h"
+
+
+extern int yylineno; 
 extern int yylex();  // Lexical analyzer
 extern char *yytext;  // Declare yytext
 void yyerror(const char *s);  // Error handler
+
+Node* root = nullptr;  // Global root for AST
 %}
 
 //(B) Syntax Analysis (Parser) using Bison.
@@ -14,267 +19,230 @@ void yyerror(const char *s);  // Error handler
 //   -Validates the grammar based on the MiniJava EBNF.
 //   -Constructs an Abstract Syntax Tree (AST).
 
+%debug
+%expect 10
+%define parse.error verbose
+
+// Declare data types for AST nodes and values
 %union {
     char* sval;       // For IDENTIFIER, STRING
     int ival;         // For NUMBER
     struct Node* node; // For AST nodes
 }
 
-
+// Token declarations
 %token CLASS PUBLIC STATIC VOID MAIN INT BOOLEAN RETURN IF ELSE WHILE PRINTLN
 %token THIS NEW TRUE FALSE
 %token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET SEMICOLON COMMA DOT ASSIGN
 %token AND OR EQUAL LT GT PLUS MINUS MULT NOT
 
-%type <node> Goal MainClass StatementList Statement Expression MethodDeclaration
-%type <node> ParamList VarDeclaration Type
-%token <sval> IDENTIFIER STRING
+%type <node> Goal MainClass MainArgs ClassDeclarations ClassDeclaration VarDeclarations MethodDeclarations StatementList Statement Expression MethodDeclaration ParamList VarDeclaration Type ArgList
+%token <sval> IDENTIFIER STRING STRING_LITERAL
 %token <ival> NUMBER
-%debug //remove when done
 
+// Precedence and associativity (fixes shift/reduce conflicts)
+%right ASSIGN           // Lowest precedence (right-associative)
+%left OR                // Logical OR
+%left AND               // Logical AND
+%left EQUAL             // Equality (==)
+%left LT GT             // Comparisons (<, >)
+%left PLUS MINUS        // Addition and subtraction
+%left MULT              // Multiplication
+%right NOT              // Logical negation (!)
+%left LPAREN RPAREN LBRACKET RBRACKET  // Ensure function calls and array indexing are handled correctly
 
 %start Goal
 
 %%
 
+// Structure
 Goal:
-    MainClass
+    MainClass ClassDeclarations
     {
-        root = $1;  // Set the root of the AST to the MainClass node
+        root = new Node("PROGRAM", "PROGRAM", yylineno);
+        root->add_child($1);
+        root->add_child($2);
     }
     ;
 
-MainClass:
-    CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN LBRACE Statement RBRACE RBRACE
+MainClass: 
+    CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET MainArgs RPAREN LBRACE StatementList RBRACE RBRACE
     {
-        $$ = new Node("MainClass", $2, yylineno);
+        $$ = new Node("MainClass", "MainClass", yylineno);
+        $$->add_child(new Node("IDENTIFIER", $2, yylineno));  // $2 is the class name ("Main")
+        if ($12) $$->add_child($12);  // $12 is MainArgs (String[] args)
+        if ($15) $$->add_child($15);  // $15 is StatementList (inside main)
     };
 
+MainArgs:
+    IDENTIFIER
+    {
+        $$ = new Node("MainArgs", "MainArgs", yylineno);
+        $$->add_child(new Node("IDENTIFIER", $1, yylineno));
+    }
+    | /* empty */
+    { 
+        $$ = NULL; 
+    }
+;
+
+
 ClassDeclarations:
+    /* empty */
+    {
+        $$ = new Node("EMPTY_CLASS_DECL", "EMPTY_CLASS_DECL", yylineno);
+    }
     | ClassDeclarations ClassDeclaration
+    {
+        $$ = $1;
+        $$->add_child($2);
+    }
     ;
 
 ClassDeclaration:
     CLASS IDENTIFIER LBRACE VarDeclarations MethodDeclarations RBRACE
+    {
+        $$ = new Node("CLASS_DECL", $2, yylineno);
+        $$->add_child($4);
+        $$->add_child($5);
+    }
     ;
 
 VarDeclarations:
+    /* empty */ { $$ = new Node("EMPTY_VAR_DECL", "EMPTY_VAR_DECL", yylineno); }
     | VarDeclarations VarDeclaration
+    {
+        $$ = $1;
+        $$->add_child($2);
+    }
     ;
 
 VarDeclaration:
     Type IDENTIFIER SEMICOLON
+    {
+        $$ = new Node("VAR_DECL", $2, yylineno);
+        $$->add_child($1);
+    }
     ;
 
 MethodDeclarations:
+    /* empty */ { $$ = new Node("EMPTY_METHOD_DECL", "EMPTY_METHOD_DECL", yylineno); }
     | MethodDeclarations MethodDeclaration
+    {
+        $$ = $1;
+        $$->add_child($2);
+    }
     ;
 
 MethodDeclaration:
     PUBLIC Type IDENTIFIER LPAREN ParamList RPAREN LBRACE VarDeclarations StatementList RETURN Expression SEMICOLON RBRACE
+    {
+        $$ = new Node("METHOD_DECL", $3, yylineno);
+        $$->add_child($2);
+        $$->add_child($5);
+        $$->add_child($8);
+        $$->add_child($9);
+    }
     ;
 
 ParamList:
-    /* empty */
-{
-    $$ = nullptr;  // Default value for empty ParamList
-}
-| Type IDENTIFIER
-{
-    $$ = new Node("PARAM", *$2, yylineno);  // Create a new parameter node
-}
+    /* empty */ { $$ = new Node("EMPTY_PARAM", "EMPTY_PARAM", yylineno); }
+    | Type IDENTIFIER
+    {
+        $$ = new Node("PARAM", $2, yylineno);
+        $$->add_child($1);
+    }
+    ;
 
 Type:
-    INT { $$ = strdup("int"); }
-    | BOOLEAN { $$ = strdup("boolean"); }
+    INT { $$ = new Node("INT_TYPE", "int", yylineno); }
+    | BOOLEAN { $$ = new Node("BOOLEAN_TYPE", "boolean", yylineno); }
+    | IDENTIFIER { $$ = new Node("IDENTIFIER", $1, yylineno); }
     ;
-
-| BOOLEAN
-{
-    $$ = new Node("BOOLEAN_TYPE", "boolean", yylineno);
-}
-| INT
-{
-    $$ = new Node("INT_TYPE", "int", yylineno);
-}
-| IDENTIFIER
-{
-    $$ = new Node("IDENTIFIER", *$1, yylineno);  // Handle custom type
-}
 
 StatementList:
-    /* empty */ 
+    Statement StatementList
     {
-        $$ = nullptr;  // Empty statement list
+        $$ = new Node("StatementList", "StatementList", yylineno);
+        $$->add_child($1);
+        $$->add_child($2);
     }
-    | StatementList Statement
+|   /* empty */
     {
-        $$ = $1;
-        $$->add_child($2);  // Add the statement as a child
+        $$ = NULL;
     }
-    ;
+;
 
 Statement:
-    LBRACE StatementList RBRACE
+    LBRACE StatementList RBRACE { $$ = $2; }
+    | IF LPAREN Expression RPAREN Statement
     {
-        $$ = $2;  // StatementList is already of type Node*
+        $$ = new Node("IF", "if", yylineno);
+        $$->add_child($3);  // Expression is a Node*
+        $$->add_child($5);  // Statement is a Node*
     }
     | IF LPAREN Expression RPAREN Statement ELSE Statement
     {
-        $$ = new Node("IF", "if", yylineno);
-        $$->add_child($3);  // Expression
-        $$->add_child($5);  // Statement
-        $$->add_child($7);  // Statement
+        $$ = new Node("IF_ELSE", "if_else", yylineno);
+        $$->add_child($3);  // Expression is a Node*
+        $$->add_child($5);  // Statement is a Node*
+        $$->add_child($7);  // Else Statement is a Node*
     }
     | WHILE LPAREN Expression RPAREN Statement
     {
         $$ = new Node("WHILE", "while", yylineno);
-        $$->add_child($3);  // Expression
-        $$->add_child($5);  // Statement
+        $$->add_child($3);  // Expression is a Node*
+        $$->add_child($5);  // Statement is a Node*
     }
     | PRINTLN LPAREN Expression RPAREN SEMICOLON
     {
         $$ = new Node("PRINTLN", "println", yylineno);
-        $$->add_child($3);  // Expression
+        $$->add_child($3);  // Expression is a Node*
     }
     | IDENTIFIER ASSIGN Expression SEMICOLON
     {
         $$ = new Node("ASSIGN", "=", yylineno);
-        $$->add_child(new Node("IDENTIFIER", $1, yylineno));  // Identifier is string*
-        $$->add_child($3);  // Expression is Node*
-    }
-    | IDENTIFIER LBRACKET Expression RBRACKET ASSIGN Expression SEMICOLON
-    {
-        $$ = new Node("ARRAY_ASSIGN", "[]=", yylineno);
-        $$->add_child(new Node("IDENTIFIER", $1, yylineno));  // Array name
-        $$->add_child($3);  // Index expression
-        $$->add_child($5);  // Value to assign
+        $$->add_child(new Node("IDENTIFIER", $1, yylineno));  // $1 is IDENTIFIER, which is a string
+        $$->add_child($3);  // Expression is a Node*
     }
     ;
 
 Expression:
-    | Expression AND Expression
-    {
-        $$ = new Node("AND", "&&", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression OR Expression
-    {
-        $$ = new Node("OR", "||", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression LT Expression
-    {
-        $$ = new Node("LT", "<", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression GT Expression
-    {
-        $$ = new Node("GT", ">", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression EQUAL Expression
-    {
-        $$ = new Node("EQUAL", "==", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression PLUS Expression
-    {
-        $$ = new Node("PLUS", "+", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression MINUS Expression
-    {
-        $$ = new Node("MINUS", "-", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression MULT Expression
-    {
-        $$ = new Node("MULT", "*", yylineno);
-        $$->add_child($1);  // Left operand
-        $$->add_child($3);  // Right operand
-    }
-    | Expression LBRACKET Expression RBRACKET
-    {
-        $$ = new Node("ARRAY_ACCESS", "[]", yylineno);
-        $$->add_child($1);  // Array name
-        $$->add_child($3);  // Index expression
-    }
-    | Expression DOT IDENTIFIER LPAREN ArgList RPAREN
-    {
-        $$ = new Node("METHOD_CALL", ".", yylineno);
-        $$->add_child($1);  // Object
-        $$->add_child(new Node("IDENTIFIER", $3, yylineno));  // Method name
-        $$->add_child($3);  // Arguments for method call
-    }
-    | NUMBER
-    {
-        $$ = new Node("NUMBER", std::to_string($1), yylineno);
-    }
-    | TRUE
-    {
-        $$ = new Node("BOOLEAN", "true", yylineno);
-    }
-    | FALSE
-    {
-        $$ = new Node("BOOLEAN", "false", yylineno);
-    }
-    | IDENTIFIER
-    {
-        $$ = new Node("IDENTIFIER", $1, yylineno);
-    }
-    | THIS
-    {
-        $$ = new Node("THIS", "this", yylineno);
-    }
-    | NEW INT LBRACKET Expression RBRACKET
-    {
-        $$ = new Node("NEW_ARRAY", "int", yylineno);
-        $$->add_child($4);  // Array size
-    }
-    | NEW IDENTIFIER LPAREN RPAREN
-    {
-        $$ = new Node("NEW_OBJECT", "new", yylineno);
-        $$->add_child(new Node("IDENTIFIER", $2, yylineno));  // Class name
-    }
-    | NOT Expression
-    {
-        $$ = new Node("NOT", "!", yylineno);
-        $$->add_child($2);  // Expression after "!"
-    }
-    | LPAREN Expression RPAREN
-    {
-        $$ = $2;  // Parentheses just return the inner expression
-    }
+    Expression AND Expression { $$ = new Node("AND", "&&", yylineno); $$->add_child($1); $$->add_child($3); }
+    | Expression OR Expression { $$ = new Node("OR", "||", yylineno); $$->add_child($1); $$->add_child($3); }
+    | Expression LT Expression { $$ = new Node("LT", "<", yylineno); $$->add_child($1); $$->add_child($3); }
+    | Expression GT Expression { $$ = new Node("GT", ">", yylineno); $$->add_child($1); $$->add_child($3); }
+    | Expression EQUAL Expression { $$ = new Node("EQUAL", "==", yylineno); $$->add_child($1); $$->add_child($3); }
+    | Expression PLUS Expression { $$ = new Node("PLUS", "+", yylineno); $$->add_child($1); $$->add_child($3); }
+    | Expression MINUS Expression { $$ = new Node("MINUS", "-", yylineno); $$->add_child($1); $$->add_child($3); }
+    | Expression MULT Expression { $$ = new Node("MULT", "*", yylineno); $$->add_child($1); $$->add_child($3); }
+    | NOT Expression { $$ = new Node("NOT", "!", yylineno); $$->add_child($2); }
+    | LPAREN Expression RPAREN { $$ = $2; }
+    | Expression DOT IDENTIFIER LPAREN ArgList RPAREN { $$ = new Node("METHOD_CALL", ".", yylineno); $$->add_child($1); $$->add_child(new Node("IDENTIFIER", $3, yylineno)); $$->add_child($5); }
+    | NUMBER { $$ = new Node("NUMBER", std::to_string($1), yylineno); }
+    | IDENTIFIER { $$ = new Node("IDENTIFIER", $1, yylineno); }
+    | STRING_LITERAL { $$ = new Node("STRING_LITERAL", $1, yylineno); }
     ;
 
 ArgList:
-    | Expression
+    Expression
     | ArgList COMMA Expression
     ;
 
 %%
 
-Node* root = nullptr;  // Global root for AST
-
 void yyerror(const char *s) {
-    fprintf(stderr, "Parse error: %s at token: %s\n", s, yytext);
+    fprintf(stderr, "Parse error: %s at line %d, token: %s\n", s, yylineno, yytext);
 }
 
 int main() {
+    yydebug = 1;  // Enable Bison debug output
+
     if (yyparse() == 0) {
         printf("Parsing completed successfully!\n");
-        // Print the AST
         if (root) {
-            root->print_tree();  // Print the AST
-            root->generate_tree();  // Generate a DOT file for visualization
+            root->print_tree();
+            root->generate_tree();
         }
     } else {
         printf("Parsing failed.\n");

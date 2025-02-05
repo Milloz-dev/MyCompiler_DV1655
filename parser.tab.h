@@ -91,7 +91,8 @@ extern int yydebug;
     NOT = 292,                     /* NOT  */
     IDENTIFIER = 293,              /* IDENTIFIER  */
     STRING = 294,                  /* STRING  */
-    NUMBER = 295                   /* NUMBER  */
+    STRING_LITERAL = 295,          /* STRING_LITERAL  */
+    NUMBER = 296                   /* NUMBER  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -100,13 +101,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "parser.y"
+#line 27 "parser.y"
 
     char* sval;       // For IDENTIFIER, STRING
     int ival;         // For NUMBER
     struct Node* node; // For AST nodes
 
-#line 110 "parser.tab.h"
+#line 111 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
