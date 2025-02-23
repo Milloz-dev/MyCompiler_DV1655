@@ -37,6 +37,9 @@
 
 #ifndef YY_YY_PARSER_TAB_HH_INCLUDED
 # define YY_YY_PARSER_TAB_HH_INCLUDED
+
+#include "Node.h" /* Manually added */
+
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 1
@@ -92,7 +95,8 @@ extern int yydebug;
     IDENTIFIER = 293,              /* IDENTIFIER  */
     STRING = 294,                  /* STRING  */
     STRING_LITERAL = 295,          /* STRING_LITERAL  */
-    NUMBER = 296                   /* NUMBER  */
+    NUMBER = 296,                  /* NUMBER  */
+    ERROR = 297                    /* ERROR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -101,13 +105,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "parser.yy"
+#line 22 "parser.yy"
 
-    std::string* sval;  // Ändra från char* till std::string*
-    int ival;         
-    Node* node;       
+    std::string* sval;
+    int ival;
+    Node* node;
 
-#line 111 "parser.tab.hh"
+#line 112 "parser.tab.hh"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -1,10 +1,13 @@
 %option c++ noyywrap
 
 %{
-#include "parser.tab.h"  // Bison-generated header
+#include "parser.tab.hh"
+#include "Node.h"
 #include <iostream>
 #include <string>
 #include <cstring>
+
+int yylineno = 1;
 
 using namespace std;
 
@@ -82,7 +85,7 @@ NUMBER  {DIGIT}+
 
 . { 
     cerr << "Lexical error: unexpected character '" << yytext[0] << "'" << endl;
-    return ERROR; // Definiera ERROR i din parser
+    return ERROR;
 
 }
 
