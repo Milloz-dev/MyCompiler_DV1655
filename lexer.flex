@@ -4,6 +4,8 @@
 #include "parser.tab.h"  // Bison-generated header
 #include <iostream>
 #include <string>
+#include <cstring>
+
 using namespace std;
 
 /* (A) Lexical Analysis (Scanner) using Flex.
@@ -59,33 +61,30 @@ NUMBER  {DIGIT}+
 "*"           { cout << "Token: MULT" << endl; return MULT; }
 "!"           { cout << "Token: NOT" << endl; return NOT; }
 
-\"([^\\"]|\\.)*\"  { 
-    yylval.sval = new string(yytext); 
-    return STRING_LITERAL; 
-}
-
 {IDENTIFIER} { 
-    yylval.sval = new string(yytext); 
+    yylval.sval = new std::string(yytext); 
     return IDENTIFIER; 
 }
 
+\"([^\\"]|\\.)*\"  { 
+    yylval.sval = new std::string(yytext); 
+    return STRING_LITERAL; 
+}
+
 {NUMBER} { 
-    yylval.ival = stoi(yytext); 
+    std::cout << "LEXER: Found NUMBER -> " << yytext << std::endl;
+    yylval.ival = std::stoi(yytext);
     return NUMBER; 
 }
 
-"//".* { /* Ignore comments */ }
-[ \t\n\r]+ { /* Ignore spaces, tabs, and newlines */ }
+
+[ \t\r\n]+  { /* Ignore spaces, tabs, and newlines */ }
 
 . { 
-    cerr << "Unexpected character: " << yytext[0] << endl; 
-    exit(1); 
+    cerr << "Lexical error: unexpected character '" << yytext[0] << "'" << endl;
+    return ERROR; // Definiera ERROR i din parser
+
 }
 
 %%
 
-// Define yyFlexLexer to avoid linker errors
-#include <FlexLexer.h>
-int yyFlexLexer::yylex() {
-    return yylex();
-}

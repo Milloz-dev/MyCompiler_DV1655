@@ -21,6 +21,12 @@ public:
 
     Node(std::string t, std::string v, int ln) : type(t), value(v), line_number(ln) {}
 
+	~Node() {
+		for (auto child : children) {
+			delete child;
+		}
+	}
+
     void add_child(Node* child) {
         children.push_back(child);
     }

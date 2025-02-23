@@ -25,10 +25,12 @@ Node* root = nullptr;  // Global root for AST
 %expect 1
 
 %union {
-    char* sval;       // For IDENTIFIER, STRING
-    int ival;         // For NUMBER
-    Node* node;       // For AST nodes
+    std::string* sval;  // Ändra från char* till std::string*
+    int ival;         
+    Node* node;       
 }
+
+%destructor { delete $$; } <sval> 
 
 // Token declarations
 %token CLASS PUBLIC STATIC VOID MAIN INT BOOLEAN RETURN IF ELSE WHILE PRINTLN
@@ -39,6 +41,7 @@ Node* root = nullptr;  // Global root for AST
 %type <node> Goal MainClass MainArgs ClassDeclarations ClassDeclaration VarDeclarations MethodDeclarations StatementList Statement Expression MethodDeclaration ParamList VarDeclaration Type
 %token <sval> IDENTIFIER STRING STRING_LITERAL
 %token <ival> NUMBER
+
 
 // Operator precedence and associativity
 %right ASSIGN           
@@ -69,16 +72,19 @@ MainClass:
     CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET MainArgs RPAREN LBRACE StatementList RBRACE RBRACE
     {
         $$ = new Node("MainClass", "MainClass", yylineno);
-        $$->add_child(new Node("IDENTIFIER", $2, yylineno));
+        $$->add_child(new Node("IDENTIFIER", *$2, yylineno));
+        $$->add_child(new Node("STRING_TYPE", *$9, yylineno));  // Use $9 explicitly
+        $$->add_child(new Node("ARRAY_TYPE", "String[]", yylineno));  // Explicitly use $9
         if ($12) $$->add_child($12);
         if ($15) $$->add_child($15);
     };
+
 
 MainArgs:
     IDENTIFIER
     {
         $$ = new Node("MainArgs", "MainArgs", yylineno);
-        $$->add_child(new Node("IDENTIFIER", $1, yylineno));
+        $$->add_child(new Node("IDENTIFIER", *$1, yylineno));
     }
     | { $$ = nullptr; }
 ;
@@ -95,7 +101,7 @@ ClassDeclarations:
 ClassDeclaration:
     CLASS IDENTIFIER LBRACE VarDeclarations MethodDeclarations RBRACE
     {
-        $$ = new Node("CLASS_DECL", $2, yylineno);
+        $$ = new Node("CLASS_DECL", *$2, yylineno);
         $$->add_child($4);
         $$->add_child($5);
     }
@@ -114,7 +120,7 @@ VarDeclaration:
     Type IDENTIFIER SEMICOLON
     {
         $$ = new Node("VAR_DECL", $2, yylineno);
-        $$->add_child($1);
+        $$->add_child(*$1);
     }
     ;
 
@@ -130,7 +136,7 @@ MethodDeclarations:
 MethodDeclaration:
     PUBLIC Type IDENTIFIER LPAREN ParamList RPAREN LBRACE VarDeclarations StatementList RETURN Expression SEMICOLON RBRACE
     {
-        $$ = new Node("METHOD_DECL", $3, yylineno);
+        $$ = new Node("METHOD_DECL", *$3, yylineno);
         $$->add_child($2);
         $$->add_child($5);
         $$->add_child($8);
@@ -142,7 +148,7 @@ ParamList:
     { $$ = new Node("EMPTY_PARAM", "EMPTY_PARAM", yylineno); }
     | Type IDENTIFIER
     {
-        $$ = new Node("PARAM", $2, yylineno);
+        $$ = new Node("PARAM", *$2, yylineno);
         $$->add_child($1);
     }
     ;
@@ -150,8 +156,7 @@ ParamList:
 Type:
     INT { $$ = new Node("INT_TYPE", "int", yylineno); }
     | BOOLEAN { $$ = new Node("BOOLEAN_TYPE", "boolean", yylineno); }
-    | IDENTIFIER { $$ = new Node("IDENTIFIER", $1, yylineno); }
-    ;
+    | IDENTIFIER { $$ = new Node("IDENTIFIER", *$1, yylineno); delete $1; }
 
 StatementList:
     Statement StatementList
@@ -165,7 +170,7 @@ StatementList:
 
 Statement:
     LBRACE StatementList RBRACE { $$ = $2; }
-    | IF LPAREN Expression RPAREN Statement
+    |IF LPAREN Expression RPAREN Statement %prec LT
     {
         $$ = new Node("IF", "if", yylineno);
         $$->add_child($3);
@@ -192,7 +197,7 @@ Statement:
     | IDENTIFIER ASSIGN Expression SEMICOLON
     {
         $$ = new Node("ASSIGN", "=", yylineno);
-        $$->add_child(new Node("IDENTIFIER", $1, yylineno));
+        $$->add_child(new Node("IDENTIFIER", *$1, yylineno));
         $$->add_child($3);
     }
     ;
@@ -209,27 +214,28 @@ Expression:
     | NOT Expression { $$ = new Node("NOT", "!", yylineno); $$->add_child($2); }
     | LPAREN Expression RPAREN { $$ = $2; }
     | NUMBER { $$ = new Node("NUMBER", to_string($1), yylineno); }
-    | IDENTIFIER { $$ = new Node("IDENTIFIER", $1, yylineno); }
-    | STRING_LITERAL { $$ = new Node("STRING_LITERAL", $1, yylineno); }
+    | IDENTIFIER { $$ = new Node("IDENTIFIER", *$1, yylineno); }
+    | STRING_LITERAL { $$ = new Node("STRING_LITERAL", *$1, yylineno); }
     ;
 
 %%
 
 void yyerror(const char *s) {
-    cerr << "Parse error: " << s << " at line " << yylineno << ", token: " << yytext << endl;
+    std::cerr << "ERROR: " << s << " at line " << yylineno << ", token: " << yytext << std::endl;
 }
 
 int main() {
-    yydebug = 1;  // Enable debug output
+    yydebug = 1;  // Debug mode
 
     if (yyparse() == 0) {
-        cout << "Parsing completed successfully!\n";
+        std::cout << "Parsing completed successfully!\n";
         if (root) {
             root->print_tree();
-            root->generate_tree();
+            delete root;
         }
     } else {
-        cout << "Parsing failed.\n";
+        std::cout << "Parsing failed.\n";
     }
+
     return 0;
 }
