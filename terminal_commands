@@ -1,4 +1,4 @@
-flex -o lex.yy.cc lexer.flex
+flex --c++ -o lex.yy.cc lexer.flex 
 bison -d -Wall -Wcounterexamples -Wother parser.yy
 g++ -o mycompiler parser.tab.cc lex.yy.cc -L/usr/local/opt/flex/lib -lfl -std=c++11
 
