@@ -72,20 +72,23 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 #include "Node.h"
-#include "parser.tab.hh"
 
-// Define lexer instance
+#include <FlexLexer.h>
+yyFlexLexer* lexer = nullptr;
+
+#define yylex lexer->yylex()
+
+
+
 extern int yylineno;
-extern char *yytext;
+int yylex();
+
 void yyerror(const char *s);
-
-// Declare `yylex()` correctly
-extern int yylex();
-
 Node* root = nullptr;  // Global AST root
 
-#line 89 "parser.tab.cc"
+#line 92 "parser.tab.cc"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -559,9 +562,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    47,    47,    56,    65,    71,    77,    86,    90,    97,
-     105,   109,   116,   129,   137,   142,   149,   153,   157,   165,
-     171,   177,   184,   191,   196
+       0,    50,    50,    59,    68,    74,    80,    89,    93,   100,
+     108,   112,   119,   132,   140,   145,   152,   156,   160,   168,
+     174,   180,   187,   194,   199
 };
 #endif
 
@@ -900,21 +903,21 @@ yydestruct (const char *yymsg,
   switch (yykind)
     {
     case YYSYMBOL_IDENTIFIER: /* IDENTIFIER  */
-#line 28 "parser.yy"
+#line 31 "parser.yy"
             { delete ((*yyvaluep).sval); }
-#line 906 "parser.tab.cc"
+#line 909 "parser.tab.cc"
         break;
 
     case YYSYMBOL_STRING: /* STRING  */
-#line 28 "parser.yy"
+#line 31 "parser.yy"
             { delete ((*yyvaluep).sval); }
-#line 912 "parser.tab.cc"
+#line 915 "parser.tab.cc"
         break;
 
     case YYSYMBOL_STRING_LITERAL: /* STRING_LITERAL  */
-#line 28 "parser.yy"
+#line 31 "parser.yy"
             { delete ((*yyvaluep).sval); }
-#line 918 "parser.tab.cc"
+#line 921 "parser.tab.cc"
         break;
 
       default:
@@ -1182,104 +1185,104 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* Goal: MainClass ClassDeclarations  */
-#line 48 "parser.yy"
+#line 51 "parser.yy"
     {
         std::cout << "[DEBUG] Parsing Goal at line " << yylineno << std::endl;
         root = new Node("PROGRAM", "PROGRAM", yylineno);
         root->add_child((yyvsp[-1].node));
         if ((yyvsp[0].node)) root->add_child((yyvsp[0].node));
     }
-#line 1193 "parser.tab.cc"
+#line 1196 "parser.tab.cc"
     break;
 
   case 3: /* MainClass: CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET RPAREN LBRACE StatementList RBRACE  */
-#line 57 "parser.yy"
+#line 60 "parser.yy"
     {
         std::cout << "[DEBUG] Parsing MainClass: " << *(yyvsp[-13].sval) << " at line " << yylineno << std::endl;
         (yyval.node) = new Node("MainClass", *(yyvsp[-13].sval), yylineno);
         (yyval.node)->add_child(new Node("MainArgType", *(yyvsp[-6].sval), yylineno));
         (yyval.node)->add_child((yyvsp[-1].node));
     }
-#line 1204 "parser.tab.cc"
+#line 1207 "parser.tab.cc"
     break;
 
   case 4: /* ClassDeclarations: ClassDeclarations ClassDeclaration  */
-#line 66 "parser.yy"
+#line 69 "parser.yy"
     {
         std::cout << "[DEBUG] Parsing ClassDeclarations at line " << yylineno << std::endl;
         (yyval.node) = (yyvsp[-1].node);
         (yyval.node)->add_child((yyvsp[0].node));
     }
-#line 1214 "parser.tab.cc"
+#line 1217 "parser.tab.cc"
     break;
 
   case 5: /* ClassDeclarations: %empty  */
-#line 72 "parser.yy"
+#line 75 "parser.yy"
     {
         (yyval.node) = new Node("ClassDeclarations", "Empty", yylineno);
     }
-#line 1222 "parser.tab.cc"
+#line 1225 "parser.tab.cc"
     break;
 
   case 6: /* ClassDeclaration: CLASS IDENTIFIER LBRACE VarDeclarations MethodDeclarations RBRACE  */
-#line 78 "parser.yy"
+#line 81 "parser.yy"
     {
         std::cout << "[DEBUG] Parsing ClassDeclaration: " << *(yyvsp[-4].sval) << " at line " << yylineno << std::endl;
         (yyval.node) = new Node("CLASS_DECL", *(yyvsp[-4].sval), yylineno);
         (yyval.node)->add_child((yyvsp[-2].node));
         (yyval.node)->add_child((yyvsp[-1].node));
     }
-#line 1233 "parser.tab.cc"
+#line 1236 "parser.tab.cc"
     break;
 
   case 7: /* VarDeclarations: VarDeclarations VarDeclaration  */
-#line 86 "parser.yy"
+#line 89 "parser.yy"
                                    { 
         std::cout << "[DEBUG] Parsing VarDeclarations at line " << yylineno << std::endl;
         (yyval.node) = (yyvsp[-1].node); (yyval.node)->add_child((yyvsp[0].node));
     }
-#line 1242 "parser.tab.cc"
+#line 1245 "parser.tab.cc"
     break;
 
   case 8: /* VarDeclarations: %empty  */
-#line 90 "parser.yy"
+#line 93 "parser.yy"
              { 
         std::cout << "[DEBUG] Empty VarDeclarations at line " << yylineno << std::endl;
         (yyval.node) = new Node("VarDeclarations", "Empty", yylineno);
     }
-#line 1251 "parser.tab.cc"
+#line 1254 "parser.tab.cc"
     break;
 
   case 9: /* VarDeclaration: Type IDENTIFIER SEMICOLON  */
-#line 98 "parser.yy"
+#line 101 "parser.yy"
     {
         std::cout << "[DEBUG] Parsing VarDeclaration: " << *(yyvsp[-1].sval) << " at line " << yylineno << std::endl;
         (yyval.node) = new Node("VAR_DECL", *(yyvsp[-1].sval), yylineno);
         (yyval.node)->add_child((yyvsp[-2].node));
     }
-#line 1261 "parser.tab.cc"
+#line 1264 "parser.tab.cc"
     break;
 
   case 10: /* MethodDeclarations: MethodDeclarations MethodDeclaration  */
-#line 105 "parser.yy"
+#line 108 "parser.yy"
                                          { 
         std::cout << "[DEBUG] Parsing MethodDeclarations at line " << yylineno << std::endl;
         (yyval.node) = (yyvsp[-1].node); (yyval.node)->add_child((yyvsp[0].node));
     }
-#line 1270 "parser.tab.cc"
+#line 1273 "parser.tab.cc"
     break;
 
   case 11: /* MethodDeclarations: %empty  */
-#line 109 "parser.yy"
+#line 112 "parser.yy"
              { 
         std::cout << "[DEBUG] Empty MethodDeclarations at line " << yylineno << std::endl;
         (yyval.node) = new Node("MethodDeclarations", "Empty", yylineno);
     }
-#line 1279 "parser.tab.cc"
+#line 1282 "parser.tab.cc"
     break;
 
   case 12: /* MethodDeclaration: PUBLIC Type IDENTIFIER LPAREN ParamList RPAREN LBRACE VarDeclarations StatementList RETURN Expression SEMICOLON RBRACE  */
-#line 116 "parser.yy"
+#line 119 "parser.yy"
                                                                                                                            {
         std::cout << "[DEBUG] Parsing MethodDeclaration at line " << yylineno << std::endl;
         (yyval.node) = new Node("MethodDeclaration", *(yyvsp[-10].sval), yylineno);
@@ -1290,128 +1293,128 @@ yyreduce:
         (yyval.node)->add_child((yyvsp[-2].node));       // Return expression
         delete (yyvsp[-10].sval);
     }
-#line 1294 "parser.tab.cc"
+#line 1297 "parser.tab.cc"
     break;
 
   case 13: /* Statement: PRINTLN LPAREN Expression RPAREN SEMICOLON  */
-#line 130 "parser.yy"
+#line 133 "parser.yy"
     {
         std::cout << "[DEBUG] Parsing PRINTLN at line " << yylineno << std::endl;
         (yyval.node) = new Node("PRINTLN", "println", yylineno);
         (yyval.node)->add_child((yyvsp[-2].node));
     }
-#line 1304 "parser.tab.cc"
+#line 1307 "parser.tab.cc"
     break;
 
   case 14: /* StatementList: Statement StatementList  */
-#line 137 "parser.yy"
+#line 140 "parser.yy"
                             { 
         std::cout << "[DEBUG] Parsing StatementList at line " << yylineno << std::endl;
         (yyval.node) = new Node("StatementList", "StatementList", yylineno);
         (yyval.node)->add_child((yyvsp[-1].node)); (yyval.node)->add_child((yyvsp[0].node));
     }
-#line 1314 "parser.tab.cc"
+#line 1317 "parser.tab.cc"
     break;
 
   case 15: /* StatementList: %empty  */
-#line 142 "parser.yy"
+#line 145 "parser.yy"
              { 
         std::cout << "[DEBUG] Empty StatementList at line " << yylineno << std::endl;
         (yyval.node) = new Node("StatementList", "Empty", yylineno);
     }
-#line 1323 "parser.tab.cc"
+#line 1326 "parser.tab.cc"
     break;
 
   case 16: /* Type: INT  */
-#line 149 "parser.yy"
+#line 152 "parser.yy"
         { 
         std::cout << "[DEBUG] Parsing Type (int) at line " << yylineno << std::endl;
         (yyval.node) = new Node("INT_TYPE", "int", yylineno);
     }
-#line 1332 "parser.tab.cc"
+#line 1335 "parser.tab.cc"
     break;
 
   case 17: /* Type: BOOLEAN  */
-#line 153 "parser.yy"
+#line 156 "parser.yy"
               { 
         std::cout << "[DEBUG] Parsing Type (boolean) at line " << yylineno << std::endl;
         (yyval.node) = new Node("BOOLEAN_TYPE", "boolean", yylineno);
     }
-#line 1341 "parser.tab.cc"
+#line 1344 "parser.tab.cc"
     break;
 
   case 18: /* Type: IDENTIFIER  */
-#line 157 "parser.yy"
+#line 160 "parser.yy"
                  { 
         std::cout << "[DEBUG] Parsing Type (class) at line " << yylineno << std::endl;
         (yyval.node) = new Node("IDENTIFIER", *(yyvsp[0].sval), yylineno);
         delete (yyvsp[0].sval);
     }
-#line 1351 "parser.tab.cc"
+#line 1354 "parser.tab.cc"
     break;
 
   case 19: /* ParamList: Type IDENTIFIER  */
-#line 165 "parser.yy"
+#line 168 "parser.yy"
                     { 
         std::cout << "[DEBUG] Parsing ParamList (single param) at line " << yylineno << std::endl;
         (yyval.node) = new Node("ParamList", "", yylineno);
         (yyval.node)->add_child(new Node("Param", *(yyvsp[0].sval), yylineno));
         delete (yyvsp[0].sval);
     }
-#line 1362 "parser.tab.cc"
+#line 1365 "parser.tab.cc"
     break;
 
   case 20: /* ParamList: ParamList COMMA Type IDENTIFIER  */
-#line 171 "parser.yy"
+#line 174 "parser.yy"
                                       { 
         std::cout << "[DEBUG] Parsing ParamList (multiple params) at line " << yylineno << std::endl;
         (yyval.node) = (yyvsp[-3].node);
         (yyval.node)->add_child(new Node("Param", *(yyvsp[0].sval), yylineno));
         delete (yyvsp[0].sval);
     }
-#line 1373 "parser.tab.cc"
+#line 1376 "parser.tab.cc"
     break;
 
   case 21: /* ParamList: %empty  */
-#line 177 "parser.yy"
+#line 180 "parser.yy"
              {
         std::cout << "[DEBUG] Empty ParamList at line " << yylineno << std::endl;
         (yyval.node) = new Node("ParamList", "Empty", yylineno);
     }
-#line 1382 "parser.tab.cc"
+#line 1385 "parser.tab.cc"
     break;
 
   case 22: /* Expression: Expression PLUS Expression  */
-#line 185 "parser.yy"
+#line 188 "parser.yy"
     {
         std::cout << "[DEBUG] Processing Addition (+) at line " << yylineno << std::endl;
         (yyval.node) = new Node("PLUS", "+", yylineno);
         (yyval.node)->add_child((yyvsp[-2].node));
         (yyval.node)->add_child((yyvsp[0].node));
     }
-#line 1393 "parser.tab.cc"
+#line 1396 "parser.tab.cc"
     break;
 
   case 23: /* Expression: NUMBER  */
-#line 192 "parser.yy"
+#line 195 "parser.yy"
     {
         std::cout << "[DEBUG] Integer literal: " << (yyvsp[0].ival) << " at line " << yylineno << std::endl;
         (yyval.node) = new Node("NUMBER", to_string((yyvsp[0].ival)), yylineno);
     }
-#line 1402 "parser.tab.cc"
+#line 1405 "parser.tab.cc"
     break;
 
   case 24: /* Expression: IDENTIFIER  */
-#line 197 "parser.yy"
+#line 200 "parser.yy"
     {
         std::cout << "[DEBUG] Identifier: " << *(yyvsp[0].sval) << " at line " << yylineno << std::endl;
         (yyval.node) = new Node("IDENTIFIER", *(yyvsp[0].sval), yylineno);
     }
-#line 1411 "parser.tab.cc"
+#line 1414 "parser.tab.cc"
     break;
 
 
-#line 1415 "parser.tab.cc"
+#line 1418 "parser.tab.cc"
 
       default: break;
     }
@@ -1604,15 +1607,19 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 202 "parser.yy"
+#line 205 "parser.yy"
 
 
 void yyerror(const char *s) {
-    std::cerr << "ERROR: " << s << " at line " << yylineno << ", token: " << yytext << std::endl;
+    std::cerr << "ERROR: " << s << " at line " << yylineno 
+              << ", token: " << lexer->YYText() << std::endl;
 }
 
 int main() {
-    yydebug = 1;  // Enable debug mode
+    // Create the lexer instance (using std::cin for input)
+    lexer = new yyFlexLexer(&std::cin, &std::cout);
+    
+    yydebug = 1;  // Enable debug output
     
     if (yyparse() == 0) {
         std::cout << "Parsing completed successfully!\n";
@@ -1623,5 +1630,7 @@ int main() {
     } else {
         std::cout << "Parsing failed.\n";
     }
+    
+    delete lexer;
     return 0;
 }

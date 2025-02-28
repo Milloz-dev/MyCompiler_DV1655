@@ -2,18 +2,22 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 #include "Node.h"
-#include "parser.tab.hh"
 
-// Define lexer instance
+#include <FlexLexer.h>
+yyFlexLexer* lexer = nullptr;
+
+#define yylex lexer->yylex()
+
+
+
 extern int yylineno;
-extern char *yytext;
+int yylex();
+
 void yyerror(const char *s);
-
-// Declare `yylex()` correctly
-extern int yylex();
-
 Node* root = nullptr;  // Global AST root
+extern int yylineno;
 %}
 
 %expect 0
@@ -22,7 +26,7 @@ Node* root = nullptr;  // Global AST root
 %union {
     std::string* sval;
     int ival;
-    Node* node;
+    struct Node* node;
 }
 
 %destructor { delete $$; } <sval>
@@ -162,32 +166,30 @@ Type:
     ;
 
 ParamList:
-    Type IDENTIFIER { 
-        std::cout << "[DEBUG] Parsing ParamList (single param) at line " << yylineno << std::endl;
-        (yyval.node) = new Node("ParamList", "", yylineno);
+    Type IDENTIFIER {
+        $$ = new Node("ParamList", "", yylineno);
         $$->add_child(new Node("Param", *$2, yylineno));
         delete $2;
     }
-    | ParamList COMMA Type IDENTIFIER { 
-        std::cout << "[DEBUG] Parsing ParamList (multiple params) at line " << yylineno << std::endl;
+  | ParamList COMMA Type IDENTIFIER {
         $$ = $1;
         $$->add_child(new Node("Param", *$4, yylineno));
         delete $4;
     }
-    | %empty {
-        std::cout << "[DEBUG] Empty ParamList at line " << yylineno << std::endl;
+  | %empty {
         $$ = new Node("ParamList", "Empty", yylineno);
-    }
-    ;
+    };
+
 
 Expression:
-    Expression PLUS Expression
-    {
-        std::cout << "[DEBUG] Processing Addition (+) at line " << yylineno << std::endl;
+    Expression PLUS Expression {
         $$ = new Node("PLUS", "+", yylineno);
         $$->add_child($1);
         $$->add_child($3);
     }
+    | LPAREN Expression RPAREN {
+        $$ = $2;
+    };
     | NUMBER
     {
         std::cout << "[DEBUG] Integer literal: " << $1 << " at line " << yylineno << std::endl;
@@ -197,16 +199,21 @@ Expression:
     {
         std::cout << "[DEBUG] Identifier: " << *$1 << " at line " << yylineno << std::endl;
         $$ = new Node("IDENTIFIER", *$1, yylineno);
-    };
+        delete $1;  // Free memory after use
+    }
 
 %%
 
 void yyerror(const char *s) {
-    std::cerr << "ERROR: " << s << " at line " << yylineno << ", token: " << yytext << std::endl;
+    std::cerr << "ERROR: " << s << " at line " << yylineno 
+              << ", token: " << lexer->YYText() << std::endl;
 }
 
 int main() {
-    yydebug = 1;  // Enable debug mode
+    // Create the lexer instance (using std::cin for input)
+    lexer = new yyFlexLexer(&std::cin, &std::cout);
+    
+    yydebug = 1;  // Enable debug output
     
     if (yyparse() == 0) {
         std::cout << "Parsing completed successfully!\n";
@@ -217,5 +224,7 @@ int main() {
     } else {
         std::cout << "Parsing failed.\n";
     }
+    
+    delete lexer;
     return 0;
 }

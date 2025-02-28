@@ -1,13 +1,12 @@
-%option c++ noyywrap
+%option noyywrap
+%option c++
+%option yylineno
 
 %{
 #include "parser.tab.hh"
-#include "Node.h"
-#include <iostream>
-#include <string>
-#include <cstring>
+include "Node.h"
 
-int yylineno = 1;
+#define YY_DECL yy::parser::symbol_type yylex()
 
 using namespace std;
 
@@ -17,12 +16,15 @@ using namespace std;
   - Outputs tokens for the parser.
 */
 
+int yylineno = 1;
+
 %}
 
 DIGIT   [0-9]
 LETTER  [a-zA-Z]
 IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 NUMBER  {DIGIT}+
+STRING     \"([^\\"]|\\.)*\"
 
 %%
 
@@ -64,30 +66,19 @@ NUMBER  {DIGIT}+
 "*"           { cout << "Token: MULT" << endl; return MULT; }
 "!"           { cout << "Token: NOT" << endl; return NOT; }
 
-{IDENTIFIER} { 
-    yylval.sval = new std::string(yytext); 
-    return IDENTIFIER; 
-}
+{IDENTIFIER}    { std::cout << "[LEXER] IDENTIFIER: " << yytext << std::endl; yylval.sval = new std::string(yytext); return IDENTIFIER; }
+{STRING}        { std::cout << "[LEXER] STRING_LITERAL: " << yytext << std::endl; yylval.sval = new std::string(yytext); return STRING_LITERAL; }
+{NUMBER}        { std::cout << "[LEXER] NUMBER: " << yytext << std::endl; yylval.ival = atoi(yytext); return NUMBER; }
 
-\"([^\\"]|\\.)*\"  { 
-    yylval.sval = new std::string(yytext); 
-    return STRING_LITERAL; 
-}
-
-{NUMBER} { 
-    std::cout << "LEXER: Found NUMBER -> " << yytext << std::endl;
-    yylval.ival = std::stoi(yytext);
-    return NUMBER; 
-}
 
 
 [ \t\r\n]+  { /* Ignore spaces, tabs, and newlines */ }
 
 . { 
-    cerr << "Lexical error: unexpected character '" << yytext[0] << "'" << endl;
+    std::cerr << "Lexical error: unexpected character '" << yytext[0] << "'" << std::endl;
     return ERROR;
-
 }
+
 
 %%
 
