@@ -1,0 +1,2 @@
+flex -o lexer.yy.cc lexer.l
+bison -d -o parser.tab.cc parser.y

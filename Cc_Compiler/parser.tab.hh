@@ -102,11 +102,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 13 "parser.yy"
+#line 15 "parser.yy"
 
     int ival;         // For integer numbers
     char* sval;       // For string literals and identifiers
-    struct Node* node;       // For AST nodes
+    Node* node;
 
 #line 112 "parser.tab.hh"
 
