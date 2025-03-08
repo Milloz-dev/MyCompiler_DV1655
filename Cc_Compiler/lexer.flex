@@ -1,6 +1,5 @@
 %{
 #include <iostream>
-#include <vector>
 #include "parser.tab.hh"
 #include "Node.h"
 #include <memory>
@@ -9,14 +8,12 @@ extern YYSTYPE yylval;
 
 using namespace std;
 
-vector<Node*> ast_nodes; // Store AST nodes
-
+vector<Node*> ast_nodes; // Consider changing to vector<std::unique_ptr<Node>> if needed.
 %}
 
 %option c++
 %option yylineno
 %option noyywrap
-
 
 %%
 
@@ -33,7 +30,7 @@ vector<Node*> ast_nodes; // Store AST nodes
 "else"      { yylval.node = std::make_unique<Node>("ELSE", yytext, yylineno); return ELSE; }
 "while"     { yylval.node = std::make_unique<Node>("WHILE", yytext, yylineno); return WHILE; }
 "System.out.println" { yylval.node = std::make_unique<Node>("PRINTLN", yytext, yylineno); return PRINTLN; }
-"this"      { yylval.node = std::make_unique<Node>("THIS", yytext, yylineno); return THIS; } 
+"this"      { yylval.node = std::make_unique<Node>("THIS", yytext, yylineno); return THIS; }
 "new"       { yylval.node = std::make_unique<Node>("NEW", yytext, yylineno); return NEW; }
 "true"      { yylval.node = std::make_unique<Node>("TRUE", yytext, yylineno); return TRUE; }
 "false"     { yylval.node = std::make_unique<Node>("FALSE", yytext, yylineno); return FALSE; }
@@ -57,7 +54,6 @@ vector<Node*> ast_nodes; // Store AST nodes
 "-"         { yylval.node = std::make_unique<Node>("MINUS", yytext, yylineno); return MINUS; }
 "*"         { yylval.node = std::make_unique<Node>("MULT", yytext, yylineno); return MULT; }
 "!"         { yylval.node = std::make_unique<Node>("NOT", yytext, yylineno); return NOT; }
-
 
 [0-9]+      { yylval.ival = atoi(yytext); return NUMBER; }
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.sval = strdup(yytext); return IDENTIFIER; }

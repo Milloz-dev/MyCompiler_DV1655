@@ -1,6 +1,6 @@
-#line 2 "lexer.yy.cc"
+#line 2 "lex.yy.cc"
 
-#line 4 "lexer.yy.cc"
+#line 4 "lex.yy.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -515,7 +515,6 @@ static const flex_int32_t yy_rule_can_match_eol[45] =
 #line 1 "lexer.flex"
 #line 2 "lexer.flex"
 #include <iostream>
-#include <vector>
 #include "parser.tab.hh"
 #include "Node.h"
 #include <memory>
@@ -524,10 +523,9 @@ extern YYSTYPE yylval;
 
 using namespace std;
 
-vector<Node*> ast_nodes; // Store AST nodes
-
-#line 530 "lexer.yy.cc"
-#line 531 "lexer.yy.cc"
+vector<Node*> ast_nodes; // Consider changing to vector<std::unique_ptr<Node>> if needed.
+#line 528 "lex.yy.cc"
+#line 529 "lex.yy.cc"
 
 #define INITIAL 0
 
@@ -659,10 +657,10 @@ YY_DECL
 		}
 
 	{
-#line 21 "lexer.flex"
+#line 18 "lexer.flex"
 
 
-#line 666 "lexer.yy.cc"
+#line 664 "lex.yy.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -731,228 +729,228 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 23 "lexer.flex"
+#line 20 "lexer.flex"
 { yylval.node = std::make_unique<Node>("CLASS", yytext, yylineno); return CLASS; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 24 "lexer.flex"
+#line 21 "lexer.flex"
 { yylval.node = std::make_unique<Node>("PUBLIC", yytext, yylineno); return PUBLIC; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 25 "lexer.flex"
+#line 22 "lexer.flex"
 { yylval.node = std::make_unique<Node>("STATIC", yytext, yylineno); return STATIC; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 26 "lexer.flex"
+#line 23 "lexer.flex"
 { yylval.node = std::make_unique<Node>("VOID", yytext, yylineno); return VOID; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 27 "lexer.flex"
+#line 24 "lexer.flex"
 { yylval.node = std::make_unique<Node>("MAIN", yytext, yylineno); return MAIN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 28 "lexer.flex"
+#line 25 "lexer.flex"
 { yylval.node = std::make_unique<Node>("STRING", yytext, yylineno); return STRING; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 29 "lexer.flex"
+#line 26 "lexer.flex"
 { yylval.node = std::make_unique<Node>("INT", yytext, yylineno); return INT; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 30 "lexer.flex"
+#line 27 "lexer.flex"
 { yylval.node = std::make_unique<Node>("BOOLEAN", yytext, yylineno); return BOOLEAN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 31 "lexer.flex"
+#line 28 "lexer.flex"
 { yylval.node = std::make_unique<Node>("RETURN", yytext, yylineno); return RETURN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 32 "lexer.flex"
+#line 29 "lexer.flex"
 { yylval.node = std::make_unique<Node>("IF", yytext, yylineno); return IF; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 33 "lexer.flex"
+#line 30 "lexer.flex"
 { yylval.node = std::make_unique<Node>("ELSE", yytext, yylineno); return ELSE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 34 "lexer.flex"
+#line 31 "lexer.flex"
 { yylval.node = std::make_unique<Node>("WHILE", yytext, yylineno); return WHILE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 35 "lexer.flex"
+#line 32 "lexer.flex"
 { yylval.node = std::make_unique<Node>("PRINTLN", yytext, yylineno); return PRINTLN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 36 "lexer.flex"
-{ yylval.node = std::make_unique<Node>("THIS", yytext, yylineno); return THIS; } 
+#line 33 "lexer.flex"
+{ yylval.node = std::make_unique<Node>("THIS", yytext, yylineno); return THIS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 37 "lexer.flex"
+#line 34 "lexer.flex"
 { yylval.node = std::make_unique<Node>("NEW", yytext, yylineno); return NEW; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 38 "lexer.flex"
+#line 35 "lexer.flex"
 { yylval.node = std::make_unique<Node>("TRUE", yytext, yylineno); return TRUE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 39 "lexer.flex"
+#line 36 "lexer.flex"
 { yylval.node = std::make_unique<Node>("FALSE", yytext, yylineno); return FALSE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 41 "lexer.flex"
+#line 38 "lexer.flex"
 { yylval.node = std::make_unique<Node>("LPAREN", yytext, yylineno); return LPAREN; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 42 "lexer.flex"
+#line 39 "lexer.flex"
 { yylval.node = std::make_unique<Node>("RPAREN", yytext, yylineno); return RPAREN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 43 "lexer.flex"
+#line 40 "lexer.flex"
 { yylval.node = std::make_unique<Node>("LBRACE", yytext, yylineno); return LBRACE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 44 "lexer.flex"
+#line 41 "lexer.flex"
 { yylval.node = std::make_unique<Node>("RBRACE", yytext, yylineno); return RBRACE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 45 "lexer.flex"
+#line 42 "lexer.flex"
 { yylval.node = std::make_unique<Node>("LBRACKET", yytext, yylineno); return LBRACKET; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 46 "lexer.flex"
+#line 43 "lexer.flex"
 { yylval.node = std::make_unique<Node>("RBRACKET", yytext, yylineno); return RBRACKET; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 47 "lexer.flex"
+#line 44 "lexer.flex"
 { yylval.node = std::make_unique<Node>("SEMICOLON", yytext, yylineno); return SEMICOLON; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 48 "lexer.flex"
+#line 45 "lexer.flex"
 { yylval.node = std::make_unique<Node>("COMMA", yytext, yylineno); return COMMA; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 49 "lexer.flex"
+#line 46 "lexer.flex"
 { yylval.node = std::make_unique<Node>("DOT", yytext, yylineno); return DOT; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 50 "lexer.flex"
+#line 47 "lexer.flex"
 { yylval.node = std::make_unique<Node>("ASSIGN", yytext, yylineno); return ASSIGN; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 51 "lexer.flex"
+#line 48 "lexer.flex"
 { yylval.node = std::make_unique<Node>("AND", yytext, yylineno); return AND; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 52 "lexer.flex"
+#line 49 "lexer.flex"
 { yylval.node = std::make_unique<Node>("OR", yytext, yylineno); return OR; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 53 "lexer.flex"
+#line 50 "lexer.flex"
 { yylval.node = std::make_unique<Node>("EQUAL", yytext, yylineno); return EQUAL; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 54 "lexer.flex"
+#line 51 "lexer.flex"
 { yylval.node = std::make_unique<Node>("LT", yytext, yylineno); return LT; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 55 "lexer.flex"
+#line 52 "lexer.flex"
 { yylval.node = std::make_unique<Node>("GT", yytext, yylineno); return GT; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 56 "lexer.flex"
+#line 53 "lexer.flex"
 { yylval.node = std::make_unique<Node>("PLUS", yytext, yylineno); return PLUS; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 57 "lexer.flex"
+#line 54 "lexer.flex"
 { yylval.node = std::make_unique<Node>("MINUS", yytext, yylineno); return MINUS; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 58 "lexer.flex"
+#line 55 "lexer.flex"
 { yylval.node = std::make_unique<Node>("MULT", yytext, yylineno); return MULT; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 59 "lexer.flex"
+#line 56 "lexer.flex"
 { yylval.node = std::make_unique<Node>("NOT", yytext, yylineno); return NOT; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 62 "lexer.flex"
+#line 58 "lexer.flex"
 { yylval.ival = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 63 "lexer.flex"
+#line 59 "lexer.flex"
 { yylval.sval = strdup(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 64 "lexer.flex"
+#line 60 "lexer.flex"
 { yylval.sval = strdup(yytext); return STRING_LITERAL; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 66 "lexer.flex"
+#line 62 "lexer.flex"
 { /* Ignore single-line comments */ }
 	YY_BREAK
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 67 "lexer.flex"
+#line 63 "lexer.flex"
 { /* Ignore multi-line comments */ }
 	YY_BREAK
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 69 "lexer.flex"
+#line 65 "lexer.flex"
 { /* Ignore whitespace */ }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 71 "lexer.flex"
+#line 67 "lexer.flex"
 { cerr << "Unknown Token: " << yytext << " at line " << yylineno << endl; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 73 "lexer.flex"
+#line 69 "lexer.flex"
 ECHO;
 	YY_BREAK
-#line 956 "lexer.yy.cc"
+#line 954 "lex.yy.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1924,7 +1922,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 73 "lexer.flex"
+#line 69 "lexer.flex"
 
 
 int yywrap() { return 1; }

@@ -1,21 +1,18 @@
-%{
+%code requires {
 #include <iostream>
 #include "Node.h"
 #include <memory>
 using namespace std;
-
 extern "C" int yylex();
 extern int yylineno;
 extern void yyerror(const char *s);
-
 std::unique_ptr<Node> root;
-
 %}
 
 %union {
     int ival;         // For integer numbers
     char* sval;       // For string literals and identifiers
-    Node* node;
+    std::unique_ptr<Node> node;
 }
 
 %token CLASS PUBLIC STATIC VOID MAIN INT BOOLEAN RETURN IF ELSE WHILE PRINTLN
@@ -58,8 +55,8 @@ MainClass:
 
 ClassDeclarations:
     ClassDeclarations ClassDeclaration {
-        $$ = $1;
-        $$->children.push_back($2);
+        $$ = std::move($1);
+        $$->children.push_back(std::move($2));
     }
     | %empty {
         $$ = std::make_unique<Node>("ClassDeclarations", "Empty", yylineno);
@@ -74,7 +71,7 @@ ClassDeclaration:
 
 VarDeclarations:
     VarDeclarations VarDeclaration {
-        $$ = $1;
+        $$ = std::move($1);
         $$->children.push_back(std::move($2));
     }
     | %empty {
@@ -89,7 +86,7 @@ VarDeclaration:
 
 MethodDeclarations:
     MethodDeclarations MethodDeclaration {
-        $$ = $1;
+        $$ = std::move($1);
         $$->children.push_back(std::move($2));
     }
     | %empty {
@@ -139,7 +136,7 @@ ParamList:
         $$->children.push_back(std::make_unique<Node>("Param", $2, yylineno));
     }
     | ParamList COMMA Type IDENTIFIER {
-        $$ = $1;
+        $$ = std::move($1);
         $$->children.push_back(std::make_unique<Node>("Param", $4, yylineno));
     }
     | %empty {
@@ -194,7 +191,7 @@ Expression:
     }
     | NOT Expression {
         $$ = std::make_unique<Node>("NOT", "!", yylineno);
-        $$->children.push_back(std::move(2));
+        $$->children.push_back(std::move($2));
     }
     | IDENTIFIER LPAREN ParamList RPAREN {
         $$ = std::make_unique<Node>("METHOD_CALL", $1, yylineno);
@@ -205,7 +202,7 @@ Expression:
         $$->children.push_back(std::move($3));
     }
     | LPAREN Expression RPAREN {
-        $$ = $2; // Just return the inner expression
+        $$ = std::move($2); // Just return the inner expression
     }
     | NUMBER {
         $$ = std::make_unique<Node>("NUMBER", to_string($1), yylineno);
@@ -221,7 +218,3 @@ Expression:
     };
 
 %%
-
-void yyerror(const char *s) {
-    std::cerr << "[ERROR] " << s << " at line " << yylineno << std::endl;
-}
