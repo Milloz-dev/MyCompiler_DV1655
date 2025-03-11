@@ -102,7 +102,8 @@ using namespace std;
     STRING = 294,                  /* STRING  */
     STRING_LITERAL = 295,          /* STRING_LITERAL  */
     NUMBER = 296,                  /* NUMBER  */
-    ERROR = 297                    /* ERROR  */
+    ERROR = 297,                   /* ERROR  */
+    LOWER_THAN_ELSE = 298          /* LOWER_THAN_ELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -111,13 +112,13 @@ using namespace std;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "parser.yy"
+#line 20 "parser.yy"
 
-    int ival;         // For integer numbers
-    char* sval;       // For string literals and identifiers
+    int ival;                // For integer numbers
+    std::string* sval;       // For string literals and identifiers
     std::unique_ptr<Node> node;
 
-#line 121 "parser.tab.hh"
+#line 122 "parser.tab.hh"
 
 };
 typedef union YYSTYPE YYSTYPE;
