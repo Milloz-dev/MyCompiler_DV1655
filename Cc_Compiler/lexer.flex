@@ -3,16 +3,14 @@
 #include "parser.tab.hh"
 #include "Node.h"
 #include <memory>
-
-extern YYSTYPE yylval;
-
+#include <vector>
+extern "C" int yylex(YYSTYPE *yylval);
 using namespace std;
 
-vector<Node*> ast_nodes; // Consider changing to vector<std::unique_ptr<Node>> if needed.
+vector<std::unique_ptr<Node>> ast_nodes;
 %}
 
 %option c++
-%option yylineno
 %option noyywrap
 
 %%
@@ -56,8 +54,8 @@ vector<Node*> ast_nodes; // Consider changing to vector<std::unique_ptr<Node>> i
 "!"         { yylval.node = std::make_unique<Node>("NOT", yytext, yylineno); return NOT; }
 
 [0-9]+      { yylval.ival = atoi(yytext); return NUMBER; }
-[a-zA-Z_][a-zA-Z0-9_]* { yylval.sval = strdup(yytext); return IDENTIFIER; }
-\"(\\.|[^\"])*\" { yylval.sval = strdup(yytext); return STRING_LITERAL; }
+[a-zA-Z_][a-zA-Z0-9_]* { yylval.sval = new std::string(yytext); return IDENTIFIER; }
+\"(\\.|[^\"])*\" { yylval.sval = new std::string(yytext); return STRING_LITERAL; }
 
 "//".*      { /* Ignore single-line comments */ }
 "/*"([^*]|\*+[^*/])*\*+"/" { /* Ignore multi-line comments */ }

@@ -3,11 +3,16 @@
 #include "Node.h"
 #include <memory>
 using namespace std;
+}
+
+%code {
 extern "C" int yylex();
 extern int yylineno;
 extern void yyerror(const char *s);
 std::unique_ptr<Node> root;
-%}
+}
+
+//%define api.value.type {std::variant<int, float, char*, std::unique_ptr<Node>>}
 
 %union {
     int ival;         // For integer numbers

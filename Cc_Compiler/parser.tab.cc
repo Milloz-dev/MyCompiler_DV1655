@@ -155,6 +155,15 @@ typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 
 
+/* Unqualified %code blocks.  */
+#line 8 "parser.yy"
+
+extern "C" int yylex();
+extern int yylineno;
+extern void yyerror(const char *s);
+std::unique_ptr<Node> root;
+
+#line 167 "parser.tab.cc"
 
 #ifdef short
 # undef short
@@ -539,10 +548,10 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    43,    43,    50,    57,    61,    66,    73,    77,    82,
-      88,    92,    97,   107,   113,   118,   123,   126,   129,   134,
-     138,   142,   147,   152,   157,   162,   167,   172,   177,   182,
-     187,   192,   196,   200,   204,   207,   210,   213,   216
+       0,    48,    48,    55,    62,    66,    71,    78,    82,    87,
+      93,    97,   102,   112,   118,   123,   128,   131,   134,   139,
+     143,   147,   152,   157,   162,   167,   172,   177,   182,   187,
+     192,   197,   201,   205,   209,   212,   215,   218,   221
 };
 #endif
 
@@ -1170,97 +1179,97 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* Goal: MainClass ClassDeclarations  */
-#line 43 "parser.yy"
+#line 48 "parser.yy"
                                 {
         root = std::make_unique<Node>("PROGRAM", "PROGRAM", yylineno);
         root->children.push_back(std::move((yyvsp[-1].node)));
         if ((yyvsp[0].node)) root->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1180 "parser.tab.cc"
+#line 1189 "parser.tab.cc"
     break;
 
   case 3: /* MainClass: CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET RPAREN LBRACE StatementList RBRACE  */
-#line 50 "parser.yy"
+#line 55 "parser.yy"
                                                                                                                        {
         (yyval.node) = std::make_unique<Node>("MainClass", (yyvsp[-13].sval), yylineno);
         (yyval.node)->children.push_back(std::make_unique<Node>("MainArgType", "String[]", yylineno));
         (yyval.node)->children.push_back(std::move((yyvsp[-1].node)));
     }
-#line 1190 "parser.tab.cc"
+#line 1199 "parser.tab.cc"
     break;
 
   case 4: /* ClassDeclarations: ClassDeclarations ClassDeclaration  */
-#line 57 "parser.yy"
+#line 62 "parser.yy"
                                        {
         (yyval.node) = std::move((yyvsp[-1].node));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1199 "parser.tab.cc"
+#line 1208 "parser.tab.cc"
     break;
 
   case 5: /* ClassDeclarations: %empty  */
-#line 61 "parser.yy"
+#line 66 "parser.yy"
              {
         (yyval.node) = std::make_unique<Node>("ClassDeclarations", "Empty", yylineno);
     }
-#line 1207 "parser.tab.cc"
+#line 1216 "parser.tab.cc"
     break;
 
   case 6: /* ClassDeclaration: CLASS IDENTIFIER LBRACE VarDeclarations MethodDeclarations RBRACE  */
-#line 66 "parser.yy"
+#line 71 "parser.yy"
                                                                       {
         (yyval.node) = std::make_unique<Node>("CLASS_DECL", (yyvsp[-4].sval), yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[-1].node)));
     }
-#line 1217 "parser.tab.cc"
+#line 1226 "parser.tab.cc"
     break;
 
   case 7: /* VarDeclarations: VarDeclarations VarDeclaration  */
-#line 73 "parser.yy"
+#line 78 "parser.yy"
                                    {
         (yyval.node) = std::move((yyvsp[-1].node));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1226 "parser.tab.cc"
+#line 1235 "parser.tab.cc"
     break;
 
   case 8: /* VarDeclarations: %empty  */
-#line 77 "parser.yy"
+#line 82 "parser.yy"
              {
         (yyval.node) = std::make_unique<Node>("VarDeclarations", "Empty", yylineno);
-    }
-#line 1234 "parser.tab.cc"
-    break;
-
-  case 9: /* VarDeclaration: Type IDENTIFIER SEMICOLON  */
-#line 82 "parser.yy"
-                              {
-        (yyval.node) = std::make_unique<Node>("VAR_DECL", (yyvsp[-1].sval), yylineno);
-        (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
     }
 #line 1243 "parser.tab.cc"
     break;
 
-  case 10: /* MethodDeclarations: MethodDeclarations MethodDeclaration  */
-#line 88 "parser.yy"
-                                         {
-        (yyval.node) = std::move((yyvsp[-1].node));
-        (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
+  case 9: /* VarDeclaration: Type IDENTIFIER SEMICOLON  */
+#line 87 "parser.yy"
+                              {
+        (yyval.node) = std::make_unique<Node>("VAR_DECL", (yyvsp[-1].sval), yylineno);
+        (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
     }
 #line 1252 "parser.tab.cc"
     break;
 
+  case 10: /* MethodDeclarations: MethodDeclarations MethodDeclaration  */
+#line 93 "parser.yy"
+                                         {
+        (yyval.node) = std::move((yyvsp[-1].node));
+        (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
+    }
+#line 1261 "parser.tab.cc"
+    break;
+
   case 11: /* MethodDeclarations: %empty  */
-#line 92 "parser.yy"
+#line 97 "parser.yy"
              {
         (yyval.node) = std::make_unique<Node>("MethodDeclarations", "Empty", yylineno);
     }
-#line 1260 "parser.tab.cc"
+#line 1269 "parser.tab.cc"
     break;
 
   case 12: /* MethodDeclaration: PUBLIC Type IDENTIFIER LPAREN ParamList RPAREN LBRACE VarDeclarations StatementList RETURN Expression SEMICOLON RBRACE  */
-#line 97 "parser.yy"
+#line 102 "parser.yy"
                                                                                                                            {
         (yyval.node) = std::make_unique<Node>("MethodDeclaration", (yyvsp[-10].sval), yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-11].node)));
@@ -1269,245 +1278,245 @@ yyreduce:
         (yyval.node)->children.push_back(std::move((yyvsp[-4].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
     }
-#line 1273 "parser.tab.cc"
+#line 1282 "parser.tab.cc"
     break;
 
   case 13: /* Statement: PRINTLN LPAREN Expression RPAREN SEMICOLON  */
-#line 107 "parser.yy"
+#line 112 "parser.yy"
                                                {
         (yyval.node) = std::make_unique<Node>("PRINTLN", "println", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
     }
-#line 1282 "parser.tab.cc"
+#line 1291 "parser.tab.cc"
     break;
 
   case 14: /* StatementList: Statement StatementList  */
-#line 113 "parser.yy"
+#line 118 "parser.yy"
                             {
         (yyval.node) = std::make_unique<Node>("StatementList", "StatementList", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-1].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1292 "parser.tab.cc"
+#line 1301 "parser.tab.cc"
     break;
 
   case 15: /* StatementList: %empty  */
-#line 118 "parser.yy"
+#line 123 "parser.yy"
              {
         (yyval.node) = std::make_unique<Node>("StatementList", "Empty", yylineno);
     }
-#line 1300 "parser.tab.cc"
+#line 1309 "parser.tab.cc"
     break;
 
   case 16: /* Type: INT  */
-#line 123 "parser.yy"
+#line 128 "parser.yy"
         {
         (yyval.node) = std::make_unique<Node>("INT_TYPE", "int", yylineno);
     }
-#line 1308 "parser.tab.cc"
+#line 1317 "parser.tab.cc"
     break;
 
   case 17: /* Type: BOOLEAN  */
-#line 126 "parser.yy"
+#line 131 "parser.yy"
               {
         (yyval.node) = std::make_unique<Node>("BOOLEAN_TYPE", "boolean", yylineno);
     }
-#line 1316 "parser.tab.cc"
+#line 1325 "parser.tab.cc"
     break;
 
   case 18: /* Type: IDENTIFIER  */
-#line 129 "parser.yy"
+#line 134 "parser.yy"
                  {
         (yyval.node) = std::make_unique<Node>("IDENTIFIER", (yyvsp[0].sval), yylineno);
-    }
-#line 1324 "parser.tab.cc"
-    break;
-
-  case 19: /* ParamList: Type IDENTIFIER  */
-#line 134 "parser.yy"
-                    {
-        (yyval.node) = std::make_unique<Node>("ParamList", "", yylineno);
-        (yyval.node)->children.push_back(std::make_unique<Node>("Param", (yyvsp[0].sval), yylineno));
     }
 #line 1333 "parser.tab.cc"
     break;
 
-  case 20: /* ParamList: ParamList COMMA Type IDENTIFIER  */
-#line 138 "parser.yy"
-                                      {
-        (yyval.node) = std::move((yyvsp[-3].node));
+  case 19: /* ParamList: Type IDENTIFIER  */
+#line 139 "parser.yy"
+                    {
+        (yyval.node) = std::make_unique<Node>("ParamList", "", yylineno);
         (yyval.node)->children.push_back(std::make_unique<Node>("Param", (yyvsp[0].sval), yylineno));
     }
 #line 1342 "parser.tab.cc"
     break;
 
+  case 20: /* ParamList: ParamList COMMA Type IDENTIFIER  */
+#line 143 "parser.yy"
+                                      {
+        (yyval.node) = std::move((yyvsp[-3].node));
+        (yyval.node)->children.push_back(std::make_unique<Node>("Param", (yyvsp[0].sval), yylineno));
+    }
+#line 1351 "parser.tab.cc"
+    break;
+
   case 21: /* ParamList: %empty  */
-#line 142 "parser.yy"
+#line 147 "parser.yy"
              {
         (yyval.node) = std::make_unique<Node>("ParamList", "Empty", yylineno);
     }
-#line 1350 "parser.tab.cc"
+#line 1359 "parser.tab.cc"
     break;
 
   case 22: /* Expression: Expression PLUS Expression  */
-#line 147 "parser.yy"
+#line 152 "parser.yy"
                                {
         (yyval.node) = std::make_unique<Node>("PLUS", "+", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1360 "parser.tab.cc"
+#line 1369 "parser.tab.cc"
     break;
 
   case 23: /* Expression: Expression MINUS Expression  */
-#line 152 "parser.yy"
+#line 157 "parser.yy"
                                   {
         (yyval.node) = std::make_unique<Node>("MINUS", "-", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1370 "parser.tab.cc"
+#line 1379 "parser.tab.cc"
     break;
 
   case 24: /* Expression: Expression MULT Expression  */
-#line 157 "parser.yy"
+#line 162 "parser.yy"
                                  {
         (yyval.node) = std::make_unique<Node>("MULT", "*", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1380 "parser.tab.cc"
+#line 1389 "parser.tab.cc"
     break;
 
   case 25: /* Expression: Expression AND Expression  */
-#line 162 "parser.yy"
+#line 167 "parser.yy"
                                 {
         (yyval.node) = std::make_unique<Node>("AND", "&&", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1390 "parser.tab.cc"
+#line 1399 "parser.tab.cc"
     break;
 
   case 26: /* Expression: Expression OR Expression  */
-#line 167 "parser.yy"
+#line 172 "parser.yy"
                                {
         (yyval.node) = std::make_unique<Node>("OR", "||", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1400 "parser.tab.cc"
+#line 1409 "parser.tab.cc"
     break;
 
   case 27: /* Expression: Expression EQUAL Expression  */
-#line 172 "parser.yy"
+#line 177 "parser.yy"
                                   {
         (yyval.node) = std::make_unique<Node>("EQUAL", "==", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1410 "parser.tab.cc"
+#line 1419 "parser.tab.cc"
     break;
 
   case 28: /* Expression: Expression LT Expression  */
-#line 177 "parser.yy"
+#line 182 "parser.yy"
                                {
         (yyval.node) = std::make_unique<Node>("LT", "<", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1420 "parser.tab.cc"
+#line 1429 "parser.tab.cc"
     break;
 
   case 29: /* Expression: Expression GT Expression  */
-#line 182 "parser.yy"
+#line 187 "parser.yy"
                                {
         (yyval.node) = std::make_unique<Node>("GT", ">", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-2].node)));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1430 "parser.tab.cc"
+#line 1439 "parser.tab.cc"
     break;
 
   case 30: /* Expression: IDENTIFIER ASSIGN Expression  */
-#line 187 "parser.yy"
+#line 192 "parser.yy"
                                    {
         (yyval.node) = std::make_unique<Node>("ASSIGN", "=", yylineno);
         (yyval.node)->children.push_back(std::make_unique<Node>("IDENTIFIER", (yyvsp[-2].sval), yylineno));
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1440 "parser.tab.cc"
+#line 1449 "parser.tab.cc"
     break;
 
   case 31: /* Expression: NOT Expression  */
-#line 192 "parser.yy"
+#line 197 "parser.yy"
                      {
         (yyval.node) = std::make_unique<Node>("NOT", "!", yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[0].node)));
     }
-#line 1449 "parser.tab.cc"
-    break;
-
-  case 32: /* Expression: IDENTIFIER LPAREN ParamList RPAREN  */
-#line 196 "parser.yy"
-                                         {
-        (yyval.node) = std::make_unique<Node>("METHOD_CALL", (yyvsp[-3].sval), yylineno);
-        (yyval.node)->children.push_back(std::move((yyvsp[-1].node)));
-    }
 #line 1458 "parser.tab.cc"
     break;
 
-  case 33: /* Expression: IDENTIFIER LBRACKET Expression RBRACKET  */
-#line 200 "parser.yy"
-                                              {
-        (yyval.node) = std::make_unique<Node>("ARRAY_ACCESS", (yyvsp[-3].sval), yylineno);
+  case 32: /* Expression: IDENTIFIER LPAREN ParamList RPAREN  */
+#line 201 "parser.yy"
+                                         {
+        (yyval.node) = std::make_unique<Node>("METHOD_CALL", (yyvsp[-3].sval), yylineno);
         (yyval.node)->children.push_back(std::move((yyvsp[-1].node)));
     }
 #line 1467 "parser.tab.cc"
     break;
 
+  case 33: /* Expression: IDENTIFIER LBRACKET Expression RBRACKET  */
+#line 205 "parser.yy"
+                                              {
+        (yyval.node) = std::make_unique<Node>("ARRAY_ACCESS", (yyvsp[-3].sval), yylineno);
+        (yyval.node)->children.push_back(std::move((yyvsp[-1].node)));
+    }
+#line 1476 "parser.tab.cc"
+    break;
+
   case 34: /* Expression: LPAREN Expression RPAREN  */
-#line 204 "parser.yy"
+#line 209 "parser.yy"
                                {
         (yyval.node) = std::move((yyvsp[-1].node)); // Just return the inner expression
     }
-#line 1475 "parser.tab.cc"
+#line 1484 "parser.tab.cc"
     break;
 
   case 35: /* Expression: NUMBER  */
-#line 207 "parser.yy"
+#line 212 "parser.yy"
              {
         (yyval.node) = std::make_unique<Node>("NUMBER", to_string((yyvsp[0].ival)), yylineno);
     }
-#line 1483 "parser.tab.cc"
+#line 1492 "parser.tab.cc"
     break;
 
   case 36: /* Expression: TRUE  */
-#line 210 "parser.yy"
+#line 215 "parser.yy"
            {
         (yyval.node) = std::make_unique<Node>("BOOLEAN", "true", yylineno);
     }
-#line 1491 "parser.tab.cc"
+#line 1500 "parser.tab.cc"
     break;
 
   case 37: /* Expression: FALSE  */
-#line 213 "parser.yy"
+#line 218 "parser.yy"
             {
         (yyval.node) = std::make_unique<Node>("BOOLEAN", "false", yylineno);
     }
-#line 1499 "parser.tab.cc"
+#line 1508 "parser.tab.cc"
     break;
 
   case 38: /* Expression: IDENTIFIER  */
-#line 216 "parser.yy"
+#line 221 "parser.yy"
                  {
         (yyval.node) = std::make_unique<Node>("IDENTIFIER", (yyvsp[0].sval), yylineno);
     }
-#line 1507 "parser.tab.cc"
+#line 1516 "parser.tab.cc"
     break;
 
 
-#line 1511 "parser.tab.cc"
+#line 1520 "parser.tab.cc"
 
       default: break;
     }
@@ -1700,5 +1709,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 220 "parser.yy"
+#line 225 "parser.yy"
 

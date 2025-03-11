@@ -51,13 +51,8 @@ extern int yydebug;
 #include "Node.h"
 #include <memory>
 using namespace std;
-extern "C" int yylex();
-extern int yylineno;
-extern void yyerror(const char *s);
-std::unique_ptr<Node> root;
-%
 
-#line 61 "parser.tab.hh"
+#line 56 "parser.tab.hh"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -116,13 +111,13 @@ std::unique_ptr<Node> root;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "parser.yy"
+#line 17 "parser.yy"
 
     int ival;         // For integer numbers
     char* sval;       // For string literals and identifiers
     std::unique_ptr<Node> node;
 
-#line 126 "parser.tab.hh"
+#line 121 "parser.tab.hh"
 
 };
 typedef union YYSTYPE YYSTYPE;
