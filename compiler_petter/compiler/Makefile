@@ -2,7 +2,8 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall
 
 LEX = flex
-YACC = bison
+YACC = /usr/local/opt/bison/bin/bison
+
 
 LEX_SRC = lexer.flex
 YACC_SRC = parser.yy
@@ -12,7 +13,7 @@ YACC_OUT_CC = parser.tab.cc
 YACC_OUT_HH = parser.tab.hh
 
 OBJS = $(LEX_OUT:.cc=.o) $(YACC_OUT_CC:.cc=.o) main.o
-EXEC = compiler
+EXEC = Mjcompiler
 
 all: $(EXEC)
 
