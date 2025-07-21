@@ -3,13 +3,14 @@
 #include "parser.tab.hh"
 #include "Node.h"
 #include <memory>
+#define USE_LEX_ONLY 0
 
 
 extern Node *root;
 extern FILE *yyin;
 extern int yylineno;
 extern int lexical_errors;
-extern yy::parser::symbol_type yylex();
+extern int yylex(YYSTYPE *yylval);
 
 enum errCodes {
     SUCCESS = 0,
