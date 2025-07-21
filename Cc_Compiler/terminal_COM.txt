@@ -1,4 +1,0 @@
-rm parser.tab.* lex.yy.cc
-bison -d parser.yy
-flex -o lex.yy.cc lexer.flex
-g++ -o scan lex.yy.cc parser.tab.cc -ll
