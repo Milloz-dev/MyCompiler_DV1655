@@ -1,6 +1,6 @@
-#line 2 "lex.yy.cc"
+#line 1 "lex.yy.cc"
 
-#line 4 "lex.yy.cc"
+#line 3 "lex.yy.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -524,8 +524,8 @@ extern YYSTYPE yylval;
 using namespace std;
 
 vector<Node*> ast_nodes; // Consider changing to vector<std::unique_ptr<Node>> if needed.
+#line 527 "lex.yy.cc"
 #line 528 "lex.yy.cc"
-#line 529 "lex.yy.cc"
 
 #define INITIAL 0
 
@@ -660,7 +660,7 @@ YY_DECL
 #line 18 "lexer.flex"
 
 
-#line 664 "lex.yy.cc"
+#line 663 "lex.yy.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -950,7 +950,7 @@ YY_RULE_SETUP
 #line 69 "lexer.flex"
 ECHO;
 	YY_BREAK
-#line 954 "lex.yy.cc"
+#line 953 "lex.yy.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

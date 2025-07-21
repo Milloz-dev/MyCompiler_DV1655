@@ -1,6 +1,6 @@
-#line 2 "lex.yy.cc"
+#line 1 "lex.yy.cc"
 
-#line 4 "lex.yy.cc"
+#line 3 "lex.yy.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -502,9 +502,10 @@ static const flex_int32_t yy_rule_can_match_eol[43] =
 #line 1 "lexer.flex"
 #line 6 "lexer.flex"
 #include "parser.tab.hh"
-#include <iostream>
-#include <string>
-#include <cstring>
+include "Node.h"
+
+#define YY_DECL yy::parser::symbol_type yylex()
+
 using namespace std;
 
 /* (A) Lexical Analysis (Scanner) using Flex.
@@ -648,7 +649,7 @@ YY_DECL
 		}
 
 	{
-#line 28 "lexer.flex"
+#line 29 "lexer.flex"
 
 
 #line 655 "lex.yy.cc"
@@ -720,209 +721,209 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 30 "lexer.flex"
+#line 31 "lexer.flex"
 { cout << "Token: CLASS" << endl; return CLASS; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 31 "lexer.flex"
+#line 32 "lexer.flex"
 { cout << "Token: PUBLIC" << endl; return PUBLIC; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 32 "lexer.flex"
+#line 33 "lexer.flex"
 { cout << "Token: STATIC" << endl; return STATIC; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 33 "lexer.flex"
+#line 34 "lexer.flex"
 { cout << "Token: VOID" << endl; return VOID; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 34 "lexer.flex"
+#line 35 "lexer.flex"
 { cout << "Token: MAIN" << endl; return MAIN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "lexer.flex"
+#line 36 "lexer.flex"
 { cout << "Token: STRING" << endl; return STRING; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 36 "lexer.flex"
+#line 37 "lexer.flex"
 { cout << "Token: INT" << endl; return INT; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 37 "lexer.flex"
+#line 38 "lexer.flex"
 { cout << "Token: BOOLEAN" << endl; return BOOLEAN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 38 "lexer.flex"
+#line 39 "lexer.flex"
 { cout << "Token: RETURN" << endl; return RETURN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 39 "lexer.flex"
+#line 40 "lexer.flex"
 { cout << "Token: IF" << endl; return IF; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 40 "lexer.flex"
+#line 41 "lexer.flex"
 { cout << "Token: ELSE" << endl; return ELSE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 41 "lexer.flex"
+#line 42 "lexer.flex"
 { cout << "Token: WHILE" << endl; return WHILE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 42 "lexer.flex"
+#line 43 "lexer.flex"
 { cout << "Token: PRINTLN" << endl; return PRINTLN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 43 "lexer.flex"
+#line 44 "lexer.flex"
 { cout << "Token: THIS" << endl; return THIS; } 
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 44 "lexer.flex"
+#line 45 "lexer.flex"
 { cout << "Token: NEW" << endl; return NEW; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 45 "lexer.flex"
+#line 46 "lexer.flex"
 { cout << "Token: TRUE" << endl; return TRUE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 46 "lexer.flex"
+#line 47 "lexer.flex"
 { cout << "Token: FALSE" << endl; return FALSE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 48 "lexer.flex"
+#line 49 "lexer.flex"
 { cout << "Token: LPAREN" << endl; return LPAREN; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 49 "lexer.flex"
+#line 50 "lexer.flex"
 { cout << "Token: RPAREN" << endl; return RPAREN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 50 "lexer.flex"
+#line 51 "lexer.flex"
 { cout << "Token: LBRACE" << endl; return LBRACE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 51 "lexer.flex"
+#line 52 "lexer.flex"
 { cout << "Token: RBRACE" << endl; return RBRACE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 52 "lexer.flex"
+#line 53 "lexer.flex"
 { cout << "Token: LBRACKET" << endl; return LBRACKET; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 53 "lexer.flex"
+#line 54 "lexer.flex"
 { cout << "Token: RBRACKET" << endl; return RBRACKET; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 54 "lexer.flex"
+#line 55 "lexer.flex"
 { cout << "Token: SEMICOLON" << endl; return SEMICOLON; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 55 "lexer.flex"
+#line 56 "lexer.flex"
 { cout << "Token: COMMA" << endl; return COMMA; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 56 "lexer.flex"
+#line 57 "lexer.flex"
 { cout << "Token: DOT" << endl; return DOT; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 57 "lexer.flex"
+#line 58 "lexer.flex"
 { cout << "Token: ASSIGN" << endl; return ASSIGN; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 58 "lexer.flex"
+#line 59 "lexer.flex"
 { cout << "Token: AND" << endl; return AND; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 59 "lexer.flex"
+#line 60 "lexer.flex"
 { cout << "Token: OR" << endl; return OR; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 60 "lexer.flex"
+#line 61 "lexer.flex"
 { cout << "Token: EQUAL" << endl; return EQUAL; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 61 "lexer.flex"
+#line 62 "lexer.flex"
 { cout << "Token: LT" << endl; return LT; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 62 "lexer.flex"
+#line 63 "lexer.flex"
 { cout << "Token: GT" << endl; return GT; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 63 "lexer.flex"
+#line 64 "lexer.flex"
 { cout << "Token: PLUS" << endl; return PLUS; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 64 "lexer.flex"
+#line 65 "lexer.flex"
 { cout << "Token: MINUS" << endl; return MINUS; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 65 "lexer.flex"
+#line 66 "lexer.flex"
 { cout << "Token: MULT" << endl; return MULT; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 66 "lexer.flex"
+#line 67 "lexer.flex"
 { cout << "Token: NOT" << endl; return NOT; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 68 "lexer.flex"
+#line 69 "lexer.flex"
 { std::cout << "[LEXER] IDENTIFIER: " << yytext << std::endl; yylval.sval = new std::string(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 69 "lexer.flex"
+#line 70 "lexer.flex"
 { std::cout << "[LEXER] STRING_LITERAL: " << yytext << std::endl; yylval.sval = new std::string(yytext); return STRING_LITERAL; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 70 "lexer.flex"
+#line 71 "lexer.flex"
 { std::cout << "[LEXER] NUMBER: " << yytext << std::endl; yylval.ival = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 74 "lexer.flex"
+#line 75 "lexer.flex"
 { /* Ignore spaces, tabs, and newlines */ }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 76 "lexer.flex"
+#line 77 "lexer.flex"
 { 
     std::cerr << "Lexical error: unexpected character '" << yytext[0] << "'" << std::endl;
     return ERROR;
@@ -930,7 +931,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 82 "lexer.flex"
+#line 83 "lexer.flex"
 ECHO;
 	YY_BREAK
 #line 937 "lex.yy.cc"
@@ -1905,7 +1906,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 82 "lexer.flex"
+#line 83 "lexer.flex"
 
 
 
