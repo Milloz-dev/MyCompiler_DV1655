@@ -58,7 +58,7 @@ int lexical_errors = 0;
 "."                                 { return USE_LEX_ONLY ? (printf("DOT\n"), yylex()) : yy::parser::make_DOT(); }
 
 [0-9]+                              { return USE_LEX_ONLY ? (printf("INTEGER %s\n", yytext), yylex()) : yy::parser::make_INTEGER(stoi(yytext)); }
-[a-zA-Z_][a-zA-Z0-9_]*              { return USE_LEX_ONLY ? (printf("IDENTIFIER %s\n", yytext), yylex()) : yy::parser::make_IDENTIFIER(yytext); }
+[a-zA-Z_][a-zA-Z0-9_]*              { return USE_LEX_ONLY ? (printf("IDENTIFIER %s\n", yytext), yylex()) : yy::parser::make_IDENTIFIER(new std::string(yytext)); }
 
 .                                   {
                                       printf("\t@lexical error at line %d. Cannot recognize character: %s\n", yylineno, yytext);

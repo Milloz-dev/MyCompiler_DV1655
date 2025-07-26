@@ -4,6 +4,7 @@
 %define parse.error verbose
 %define api.value.type variant
 %define api.token.constructor
+%start root
 
 /* Required code included before the parser definition begins */
 %code requires {
@@ -29,7 +30,8 @@
 /* Tokens that carry values */
 %token <int> INT
 %token <int> INTEGER
-%token <std::string> IDENTIFIER
+%token <std::string*> IDENTIFIER
+
 
 /* End-of-file */
 %token END 0 "end of file"
@@ -45,12 +47,46 @@
 
 /* Types for non-terminals */
 %type <Node*> root expression factor
+%type <Node*> Goal MainClass Statement StatementList
 
 /* Grammar rules section */
 %%
 root:
-    expression {
+    Goal {
         root = $1;
+    }
+;
+
+Goal:
+    MainClass {
+        $$ = new Node("Goal", "", yylineno);
+        $$->children.push_back($1);
+    }
+;
+
+MainClass:
+    PUBLIC CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACK RBRACK IDENTIFIER RPAREN LBRACE StatementList RBRACE RBRACE {
+        $$ = new Node("MainClass", *$3, yylineno);
+        $$->children.push_back($16); // $16 is the StatementList
+        delete $3;  // class name (IDENTIFIER)
+        delete $13; // main method param name (IDENTIFIER) — not used in AST
+    }
+;
+
+
+StatementList:
+    /* empty */ {
+        $$ = new Node("StatementList", "", yylineno);
+    }
+  | StatementList Statement {
+        $$ = $1;
+        $$->children.push_back($2);
+    }
+;
+
+Statement:
+    SEMICOLON {
+        $$ = new Node("EmptyStatement", ";", yylineno);
     }
 ;
 

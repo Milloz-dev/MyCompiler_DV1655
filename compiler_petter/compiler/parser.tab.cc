@@ -42,7 +42,7 @@
 
 
 // Unqualified %code blocks.
-#line 16 "parser.yy"
+#line 17 "parser.yy"
 
   #define YY_DECL yy::parser::symbol_type yylex()
   YY_DECL;
@@ -191,8 +191,10 @@ namespace yy {
     switch (that.kind ())
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.YY_MOVE_OR_COPY< Node* > (YY_MOVE (that.value));
         break;
 
@@ -202,7 +204,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< std::string* > (YY_MOVE (that.value));
         break;
 
       default:
@@ -221,8 +223,10 @@ namespace yy {
     switch (that.kind ())
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.move< Node* > (YY_MOVE (that.value));
         break;
 
@@ -232,7 +236,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.move< std::string > (YY_MOVE (that.value));
+        value.move< std::string* > (YY_MOVE (that.value));
         break;
 
       default:
@@ -251,8 +255,10 @@ namespace yy {
     switch (that.kind ())
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.copy< Node* > (that.value);
         break;
 
@@ -262,7 +268,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.copy< std::string > (that.value);
+        value.copy< std::string* > (that.value);
         break;
 
       default:
@@ -279,8 +285,10 @@ namespace yy {
     switch (that.kind ())
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.move< Node* > (that.value);
         break;
 
@@ -290,7 +298,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.move< std::string > (that.value);
+        value.move< std::string* > (that.value);
         break;
 
       default:
@@ -548,8 +556,10 @@ namespace yy {
       switch (yyr1_[yyn])
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         yylhs.value.emplace< Node* > ();
         break;
 
@@ -559,7 +569,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        yylhs.value.emplace< std::string > ();
+        yylhs.value.emplace< std::string* > ();
         break;
 
       default:
@@ -576,70 +586,61 @@ namespace yy {
         {
           switch (yyn)
             {
-  case 2: // root: expression
-#line 52 "parser.yy"
-               {
+  case 2: // root: Goal
+#line 55 "parser.yy"
+         {
         root = yystack_[0].value.as < Node* > ();
-    }
-#line 585 "parser.tab.cc"
-    break;
-
-  case 3: // expression: expression PLUSOP expression
-#line 58 "parser.yy"
-                                 {
-        yylhs.value.as < Node* > () = new Node("AddExpression", "", yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
 #line 595 "parser.tab.cc"
     break;
 
-  case 4: // expression: expression MINUSOP expression
-#line 63 "parser.yy"
-                                  {
-        yylhs.value.as < Node* > () = new Node("SubExpression", "", yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
+  case 3: // Goal: MainClass
+#line 61 "parser.yy"
+              {
+        yylhs.value.as < Node* > () = new Node("Goal", "", yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 605 "parser.tab.cc"
+#line 604 "parser.tab.cc"
     break;
 
-  case 5: // expression: expression MULTOP expression
+  case 4: // MainClass: PUBLIC CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACK RBRACK IDENTIFIER RPAREN LBRACE StatementList RBRACE RBRACE
 #line 68 "parser.yy"
-                                 {
-        yylhs.value.as < Node* > () = new Node("MultExpression", "", yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+                                                                                                                                            {
+        yylhs.value.as < Node* > () = new Node("MainClass", *yystack_[15].value.as < std::string* > (), yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // $16 is the StatementList
+        delete yystack_[15].value.as < std::string* > ();  // class name (IDENTIFIER)
+        delete yystack_[5].value.as < std::string* > (); // main method param name (IDENTIFIER) — not used in AST
     }
 #line 615 "parser.tab.cc"
     break;
 
-  case 6: // expression: factor
-#line 73 "parser.yy"
-           {
-        yylhs.value.as < Node* > () = yystack_[0].value.as < Node* > ();
+  case 5: // StatementList: %empty
+#line 78 "parser.yy"
+                {
+        yylhs.value.as < Node* > () = new Node("StatementList", "", yylineno);
     }
 #line 623 "parser.tab.cc"
     break;
 
-  case 7: // factor: INT
-#line 79 "parser.yy"
-        {
-        yylhs.value.as < Node* > () = new Node("Int", std::to_string(yystack_[0].value.as < int > ()), yylineno); /* Create a leaf node for integer literal */
+  case 6: // StatementList: StatementList Statement
+#line 81 "parser.yy"
+                            {
+        yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > ();
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 631 "parser.tab.cc"
+#line 632 "parser.tab.cc"
     break;
 
-  case 8: // factor: LP expression RP
-#line 82 "parser.yy"
-                     {
-        yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > (); /* Just return the grouped expression */
+  case 7: // Statement: SEMICOLON
+#line 88 "parser.yy"
+              {
+        yylhs.value.as < Node* > () = new Node("EmptyStatement", ";", yylineno);
     }
-#line 639 "parser.tab.cc"
+#line 640 "parser.tab.cc"
     break;
 
 
-#line 643 "parser.tab.cc"
+#line 644 "parser.tab.cc"
 
             default:
               break;
@@ -987,67 +988,70 @@ namespace yy {
   }
 
 
-  const signed char parser::yypact_ninf_ = -3;
+  const signed char parser::yypact_ninf_ = -42;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-       8,     8,    -3,     4,     7,    -3,    -2,    -3,     8,     8,
-       8,    -3,     1,     1,    -3
+     -10,    -8,     4,   -42,   -42,    -5,   -42,   -34,    -4,    -6,
+      -3,    -2,   -29,    -1,   -26,   -25,     6,   -22,   -21,   -42,
+     -41,   -27,   -42,   -42,   -42
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       0,     0,     7,     0,     2,     6,     0,     1,     0,     0,
-       0,     8,     3,     4,     5
+       0,     0,     0,     2,     3,     0,     1,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     5,
+       0,     0,     7,     6,     4
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-      -3,    -3,    -1,    -3
+     -42,   -42,   -42,   -42,   -42,   -42
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     3,     4,     5
+       0,     2,     3,     4,    20,    23
   };
 
   const signed char
   parser::yytable_[] =
   {
-       6,     8,     9,    10,     7,    11,    10,    12,    13,    14,
-       8,     9,    10,     0,     1,     0,     2
+      21,    22,     1,     5,     6,     7,     8,    10,     9,    13,
+      15,    11,    16,    12,    24,    14,    17,    18,     0,    19
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       1,     3,     4,     5,     0,     7,     5,     8,     9,    10,
-       3,     4,     5,    -1,     6,    -1,     8
+      41,    42,    12,    11,     0,    10,    40,    13,    12,    38,
+      36,    14,    37,    15,    41,    16,    10,    39,    -1,    40
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,     6,     8,    46,    47,    48,    47,     0,     3,     4,
-       5,     7,    47,    47,    47
+       0,    12,    46,    47,    48,    11,     0,    10,    40,    12,
+      13,    14,    15,    38,    16,    36,    37,    10,    39,    40,
+      49,    41,    42,    50,    41
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    45,    46,    47,    47,    47,    47,    48,    48
+       0,    45,    46,    47,    48,    49,    49,    50
   };
 
   const signed char
   parser::yyr2_[] =
   {
-       0,     2,     1,     3,     3,     3,     1,     1,     3
+       0,     2,     1,     1,    18,     0,     2,     1
   };
 
 
@@ -1063,7 +1067,7 @@ namespace yy {
   "RETURN", "THIS", "NEW", "TRUE", "FALSE", "AND", "OR", "EQ", "LT", "GT",
   "PLUS", "MINUS", "TIMES", "NOT", "ASSIGN", "LBRACK", "RBRACK", "LPAREN",
   "RPAREN", "LBRACE", "RBRACE", "SEMICOLON", "COMMA", "DOT", "$accept",
-  "root", "expression", "factor", YY_NULLPTR
+  "root", "Goal", "MainClass", "StatementList", "Statement", YY_NULLPTR
   };
 #endif
 
@@ -1072,7 +1076,7 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    52,    52,    58,    63,    68,    73,    79,    82
+       0,    55,    55,    61,    68,    78,    81,    88
   };
 
   void
@@ -1104,8 +1108,8 @@ namespace yy {
 
 
 } // yy
-#line 1108 "parser.tab.cc"
+#line 1112 "parser.tab.cc"
 
-#line 87 "parser.yy"
+#line 123 "parser.yy"
 
 

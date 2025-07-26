@@ -45,7 +45,7 @@
 #ifndef YY_YY_PARSER_TAB_HH_INCLUDED
 # define YY_YY_PARSER_TAB_HH_INCLUDED
 // "%code requires" blocks.
-#line 9 "parser.yy"
+#line 10 "parser.yy"
 
   #include <string>
   #include "Node.h"
@@ -383,8 +383,10 @@ namespace yy {
     union union_type
     {
       // root
-      // expression
-      // factor
+      // Goal
+      // MainClass
+      // StatementList
+      // Statement
       char dummy1[sizeof (Node*)];
 
       // INT
@@ -392,7 +394,7 @@ namespace yy {
       char dummy2[sizeof (int)];
 
       // IDENTIFIER
-      char dummy3[sizeof (std::string)];
+      char dummy3[sizeof (std::string*)];
     };
 
     /// The size of the largest semantic type.
@@ -543,8 +545,10 @@ namespace yy {
         S_DOT = 44,                              // DOT
         S_YYACCEPT = 45,                         // $accept
         S_root = 46,                             // root
-        S_expression = 47,                       // expression
-        S_factor = 48                            // factor
+        S_Goal = 47,                             // Goal
+        S_MainClass = 48,                        // MainClass
+        S_StatementList = 49,                    // StatementList
+        S_Statement = 50                         // Statement
       };
     };
 
@@ -580,8 +584,10 @@ namespace yy {
         switch (this->kind ())
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.move< Node* > (std::move (that.value));
         break;
 
@@ -591,7 +597,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.move< std::string > (std::move (that.value));
+        value.move< std::string* > (std::move (that.value));
         break;
 
       default:
@@ -640,12 +646,12 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, std::string&& v)
+      basic_symbol (typename Base::kind_type t, std::string*&& v)
         : Base (t)
         , value (std::move (v))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const std::string& v)
+      basic_symbol (typename Base::kind_type t, const std::string*& v)
         : Base (t)
         , value (v)
       {}
@@ -676,8 +682,10 @@ namespace yy {
 switch (yykind)
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.template destroy< Node* > ();
         break;
 
@@ -687,7 +695,7 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.template destroy< std::string > ();
+        value.template destroy< std::string* > ();
         break;
 
       default:
@@ -792,10 +800,10 @@ switch (yykind)
 #endif
       {}
 #if 201103L <= YY_CPLUSPLUS
-      symbol_type (int tok, std::string v)
+      symbol_type (int tok, std::string* v)
         : super_type (token_kind_type (tok), std::move (v))
 #else
-      symbol_type (int tok, const std::string& v)
+      symbol_type (int tok, const std::string*& v)
         : super_type (token_kind_type (tok), v)
 #endif
       {}
@@ -999,14 +1007,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_IDENTIFIER (std::string v)
+      make_IDENTIFIER (std::string* v)
       {
         return symbol_type (token::IDENTIFIER, std::move (v));
       }
 #else
       static
       symbol_type
-      make_IDENTIFIER (const std::string& v)
+      make_IDENTIFIER (const std::string*& v)
       {
         return symbol_type (token::IDENTIFIER, v);
       }
@@ -1849,9 +1857,9 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 16,     ///< Last index in yytable_.
-      yynnts_ = 4,  ///< Number of nonterminal symbols.
-      yyfinal_ = 7 ///< Termination state number.
+      yylast_ = 19,     ///< Last index in yytable_.
+      yynnts_ = 6,  ///< Number of nonterminal symbols.
+      yyfinal_ = 6 ///< Termination state number.
     };
 
 
@@ -1919,8 +1927,10 @@ switch (yykind)
     switch (this->kind ())
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.copy< Node* > (YY_MOVE (that.value));
         break;
 
@@ -1930,7 +1940,7 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.copy< std::string > (YY_MOVE (that.value));
+        value.copy< std::string* > (YY_MOVE (that.value));
         break;
 
       default:
@@ -1965,8 +1975,10 @@ switch (yykind)
     switch (this->kind ())
     {
       case symbol_kind::S_root: // root
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_factor: // factor
+      case symbol_kind::S_Goal: // Goal
+      case symbol_kind::S_MainClass: // MainClass
+      case symbol_kind::S_StatementList: // StatementList
+      case symbol_kind::S_Statement: // Statement
         value.move< Node* > (YY_MOVE (s.value));
         break;
 
@@ -1976,7 +1988,7 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-        value.move< std::string > (YY_MOVE (s.value));
+        value.move< std::string* > (YY_MOVE (s.value));
         break;
 
       default:
@@ -2044,7 +2056,7 @@ switch (yykind)
 
 
 } // yy
-#line 2048 "parser.tab.hh"
+#line 2060 "parser.tab.hh"
 
 
 

@@ -1,0 +1,11 @@
+digraph {
+n0 [label="Goal:"];
+n1 [label="MainClass:Hello"];
+n2 [label="StatementList:"];
+n3 [label="EmptyStatement:;"];
+n2 -> n3
+n4 [label="EmptyStatement:;"];
+n2 -> n4
+n1 -> n2
+n0 -> n1
+}

@@ -1004,7 +1004,7 @@ YY_RULE_SETUP
 case 40:
 YY_RULE_SETUP
 #line 61 "lexer.flex"
-{ return USE_LEX_ONLY ? (printf("IDENTIFIER %s\n", yytext), yylex()) : yy::parser::make_IDENTIFIER(yytext); }
+{ return USE_LEX_ONLY ? (printf("IDENTIFIER %s\n", yytext), yylex()) : yy::parser::make_IDENTIFIER(new std::string(yytext)); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
