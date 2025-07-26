@@ -399,7 +399,9 @@ namespace yy {
       // StatementList
       // Statement
       // Type
+      // postfix
       // expression
+      // ExpressionList
       // factor
       char dummy1[sizeof (Node*)];
 
@@ -475,25 +477,26 @@ namespace yy {
     NEW = 279,                     // NEW
     TRUE = 280,                    // TRUE
     FALSE = 281,                   // FALSE
-    AND = 282,                     // AND
-    OR = 283,                      // OR
-    EQ = 284,                      // EQ
-    LT = 285,                      // LT
-    GT = 286,                      // GT
-    PLUS = 287,                    // PLUS
-    MINUS = 288,                   // MINUS
-    TIMES = 289,                   // TIMES
-    NOT = 290,                     // NOT
-    ASSIGN = 291,                  // ASSIGN
-    LBRACK = 292,                  // LBRACK
-    RBRACK = 293,                  // RBRACK
-    LPAREN = 294,                  // LPAREN
-    RPAREN = 295,                  // RPAREN
-    LBRACE = 296,                  // LBRACE
-    RBRACE = 297,                  // RBRACE
-    SEMICOLON = 298,               // SEMICOLON
-    COMMA = 299,                   // COMMA
-    DOT = 300                      // DOT
+    LENGTH = 282,                  // LENGTH
+    AND = 283,                     // AND
+    OR = 284,                      // OR
+    EQ = 285,                      // EQ
+    LT = 286,                      // LT
+    GT = 287,                      // GT
+    PLUS = 288,                    // PLUS
+    MINUS = 289,                   // MINUS
+    TIMES = 290,                   // TIMES
+    NOT = 291,                     // NOT
+    ASSIGN = 292,                  // ASSIGN
+    LBRACK = 293,                  // LBRACK
+    RBRACK = 294,                  // RBRACK
+    LPAREN = 295,                  // LPAREN
+    RPAREN = 296,                  // RPAREN
+    LBRACE = 297,                  // LBRACE
+    RBRACE = 298,                  // RBRACE
+    SEMICOLON = 299,               // SEMICOLON
+    COMMA = 300,                   // COMMA
+    DOT = 301                      // DOT
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -510,7 +513,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 46, ///< Number of tokens.
+        YYNTOKENS = 47, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -539,45 +542,48 @@ namespace yy {
         S_NEW = 24,                              // NEW
         S_TRUE = 25,                             // TRUE
         S_FALSE = 26,                            // FALSE
-        S_AND = 27,                              // AND
-        S_OR = 28,                               // OR
-        S_EQ = 29,                               // EQ
-        S_LT = 30,                               // LT
-        S_GT = 31,                               // GT
-        S_PLUS = 32,                             // PLUS
-        S_MINUS = 33,                            // MINUS
-        S_TIMES = 34,                            // TIMES
-        S_NOT = 35,                              // NOT
-        S_ASSIGN = 36,                           // ASSIGN
-        S_LBRACK = 37,                           // LBRACK
-        S_RBRACK = 38,                           // RBRACK
-        S_LPAREN = 39,                           // LPAREN
-        S_RPAREN = 40,                           // RPAREN
-        S_LBRACE = 41,                           // LBRACE
-        S_RBRACE = 42,                           // RBRACE
-        S_SEMICOLON = 43,                        // SEMICOLON
-        S_COMMA = 44,                            // COMMA
-        S_DOT = 45,                              // DOT
-        S_YYACCEPT = 46,                         // $accept
-        S_root = 47,                             // root
-        S_Goal = 48,                             // Goal
-        S_MainClass = 49,                        // MainClass
-        S_ClassDeclarations = 50,                // ClassDeclarations
-        S_ClassDeclaration = 51,                 // ClassDeclaration
-        S_VarDeclarations = 52,                  // VarDeclarations
-        S_VarDeclaration = 53,                   // VarDeclaration
-        S_MethodDeclarations = 54,               // MethodDeclarations
-        S_MethodDeclaration = 55,                // MethodDeclaration
-        S_FormalParameters = 56,                 // FormalParameters
-        S_FormalParameterList = 57,              // FormalParameterList
-        S_FormalParameter = 58,                  // FormalParameter
-        S_BlockStatements = 59,                  // BlockStatements
-        S_BlockStatement = 60,                   // BlockStatement
-        S_StatementList = 61,                    // StatementList
-        S_Statement = 62,                        // Statement
-        S_Type = 63,                             // Type
-        S_expression = 64,                       // expression
-        S_factor = 65                            // factor
+        S_LENGTH = 27,                           // LENGTH
+        S_AND = 28,                              // AND
+        S_OR = 29,                               // OR
+        S_EQ = 30,                               // EQ
+        S_LT = 31,                               // LT
+        S_GT = 32,                               // GT
+        S_PLUS = 33,                             // PLUS
+        S_MINUS = 34,                            // MINUS
+        S_TIMES = 35,                            // TIMES
+        S_NOT = 36,                              // NOT
+        S_ASSIGN = 37,                           // ASSIGN
+        S_LBRACK = 38,                           // LBRACK
+        S_RBRACK = 39,                           // RBRACK
+        S_LPAREN = 40,                           // LPAREN
+        S_RPAREN = 41,                           // RPAREN
+        S_LBRACE = 42,                           // LBRACE
+        S_RBRACE = 43,                           // RBRACE
+        S_SEMICOLON = 44,                        // SEMICOLON
+        S_COMMA = 45,                            // COMMA
+        S_DOT = 46,                              // DOT
+        S_YYACCEPT = 47,                         // $accept
+        S_root = 48,                             // root
+        S_Goal = 49,                             // Goal
+        S_MainClass = 50,                        // MainClass
+        S_ClassDeclarations = 51,                // ClassDeclarations
+        S_ClassDeclaration = 52,                 // ClassDeclaration
+        S_VarDeclarations = 53,                  // VarDeclarations
+        S_VarDeclaration = 54,                   // VarDeclaration
+        S_MethodDeclarations = 55,               // MethodDeclarations
+        S_MethodDeclaration = 56,                // MethodDeclaration
+        S_FormalParameters = 57,                 // FormalParameters
+        S_FormalParameterList = 58,              // FormalParameterList
+        S_FormalParameter = 59,                  // FormalParameter
+        S_BlockStatements = 60,                  // BlockStatements
+        S_BlockStatement = 61,                   // BlockStatement
+        S_StatementList = 62,                    // StatementList
+        S_Statement = 63,                        // Statement
+        S_Type = 64,                             // Type
+        S_postfix = 65,                          // postfix
+        S_expression = 66,                       // expression
+        S_ExpressionList = 67,                   // ExpressionList
+        S_factor = 68                            // factor
       };
     };
 
@@ -629,7 +635,9 @@ namespace yy {
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.move< Node* > (std::move (that.value));
         break;
@@ -740,7 +748,9 @@ switch (yykind)
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.template destroy< Node* > ();
         break;
@@ -1317,6 +1327,21 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
+      make_LENGTH ()
+      {
+        return symbol_type (token::LENGTH);
+      }
+#else
+      static
+      symbol_type
+      make_LENGTH ()
+      {
+        return symbol_type (token::LENGTH);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
       make_AND ()
       {
         return symbol_type (token::AND);
@@ -1667,7 +1692,7 @@ switch (yykind)
     // Tables.
     // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
     // STATE-NUM.
-    static const signed char yypact_[];
+    static const short yypact_[];
 
     // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
     // Performed when YYTABLE does not specify something else to do.  Zero
@@ -1675,7 +1700,7 @@ switch (yykind)
     static const signed char yydefact_[];
 
     // YYPGOTO[NTERM-NUM].
-    static const signed char yypgoto_[];
+    static const short yypgoto_[];
 
     // YYDEFGOTO[NTERM-NUM].
     static const signed char yydefgoto_[];
@@ -1927,8 +1952,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 131,     ///< Last index in yytable_.
-      yynnts_ = 20,  ///< Number of nonterminal symbols.
+      yylast_ = 178,     ///< Last index in yytable_.
+      yynnts_ = 22,  ///< Number of nonterminal symbols.
       yyfinal_ = 6 ///< Termination state number.
     };
 
@@ -1976,10 +2001,10 @@ switch (yykind)
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45
+      45,    46
     };
     // Last valid token kind.
-    const int code_max = 300;
+    const int code_max = 301;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -2014,7 +2039,9 @@ switch (yykind)
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.copy< Node* > (YY_MOVE (that.value));
         break;
@@ -2075,7 +2102,9 @@ switch (yykind)
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.move< Node* > (YY_MOVE (s.value));
         break;
@@ -2153,7 +2182,7 @@ switch (yykind)
 
 
 } // yy
-#line 2157 "parser.tab.hh"
+#line 2186 "parser.tab.hh"
 
 
 

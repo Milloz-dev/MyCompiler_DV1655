@@ -207,7 +207,9 @@ namespace yy {
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.YY_MOVE_OR_COPY< Node* > (YY_MOVE (that.value));
         break;
@@ -252,7 +254,9 @@ namespace yy {
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.move< Node* > (YY_MOVE (that.value));
         break;
@@ -297,7 +301,9 @@ namespace yy {
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.copy< Node* > (that.value);
         break;
@@ -340,7 +346,9 @@ namespace yy {
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         value.move< Node* > (that.value);
         break;
@@ -624,7 +632,9 @@ namespace yy {
       case symbol_kind::S_StatementList: // StatementList
       case symbol_kind::S_Statement: // Statement
       case symbol_kind::S_Type: // Type
+      case symbol_kind::S_postfix: // postfix
       case symbol_kind::S_expression: // expression
+      case symbol_kind::S_ExpressionList: // ExpressionList
       case symbol_kind::S_factor: // factor
         yylhs.value.emplace< Node* > ();
         break;
@@ -652,108 +662,108 @@ namespace yy {
           switch (yyn)
             {
   case 2: // root: Goal
-#line 63 "parser.yy"
+#line 65 "parser.yy"
          {
         root = yystack_[0].value.as < Node* > ();
     }
-#line 660 "parser.tab.cc"
+#line 670 "parser.tab.cc"
     break;
 
   case 3: // Goal: MainClass ClassDeclarations
-#line 69 "parser.yy"
+#line 71 "parser.yy"
                                 {
         yylhs.value.as < Node* > () = new Node("Goal", "", yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ());
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 670 "parser.tab.cc"
+#line 680 "parser.tab.cc"
     break;
 
   case 4: // MainClass: PUBLIC CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACK RBRACK IDENTIFIER RPAREN LBRACE StatementList RBRACE RBRACE
-#line 77 "parser.yy"
+#line 79 "parser.yy"
                                                                                                                                             {
         yylhs.value.as < Node* > () = new Node("MainClass", *yystack_[15].value.as < std::string* > (), yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // $16 is the StatementList
         delete yystack_[15].value.as < std::string* > ();  // class name (IDENTIFIER)
         delete yystack_[5].value.as < std::string* > (); // main method param name (IDENTIFIER) — not used in AST
     }
-#line 681 "parser.tab.cc"
+#line 691 "parser.tab.cc"
     break;
 
   case 5: // ClassDeclarations: %empty
-#line 86 "parser.yy"
+#line 88 "parser.yy"
                 {
         yylhs.value.as < Node* > () = new Node("ClassDeclarations", "", yylineno);
     }
-#line 689 "parser.tab.cc"
+#line 699 "parser.tab.cc"
     break;
 
   case 6: // ClassDeclarations: ClassDeclarations ClassDeclaration
-#line 89 "parser.yy"
+#line 91 "parser.yy"
                                        {
         yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > ();
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 698 "parser.tab.cc"
+#line 708 "parser.tab.cc"
     break;
 
   case 7: // ClassDeclaration: CLASS IDENTIFIER LBRACE VarDeclarations MethodDeclarations RBRACE
-#line 96 "parser.yy"
+#line 98 "parser.yy"
                                                                       {
         yylhs.value.as < Node* > () = new Node("ClassDeclaration", *yystack_[4].value.as < std::string* > (), yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // var decls
         yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ()); // method decls
         delete yystack_[4].value.as < std::string* > ();
     }
-#line 709 "parser.tab.cc"
+#line 719 "parser.tab.cc"
     break;
 
   case 8: // VarDeclarations: %empty
-#line 105 "parser.yy"
+#line 107 "parser.yy"
                 {
         yylhs.value.as < Node* > () = new Node("VarDeclarations", "", yylineno);
     }
-#line 717 "parser.tab.cc"
+#line 727 "parser.tab.cc"
     break;
 
   case 9: // VarDeclarations: VarDeclarations VarDeclaration
-#line 108 "parser.yy"
+#line 110 "parser.yy"
                                    {
         yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > ();
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 726 "parser.tab.cc"
+#line 736 "parser.tab.cc"
     break;
 
   case 10: // VarDeclaration: Type IDENTIFIER SEMICOLON
-#line 115 "parser.yy"
+#line 117 "parser.yy"
                               {
         yylhs.value.as < Node* > () = new Node("VarDeclaration", *yystack_[1].value.as < std::string* > (), yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // Type
         delete yystack_[1].value.as < std::string* > ();
     }
-#line 736 "parser.tab.cc"
+#line 746 "parser.tab.cc"
     break;
 
   case 11: // MethodDeclarations: %empty
-#line 123 "parser.yy"
+#line 125 "parser.yy"
                 {
         yylhs.value.as < Node* > () = new Node("MethodDeclarations", "", yylineno);
     }
-#line 744 "parser.tab.cc"
+#line 754 "parser.tab.cc"
     break;
 
   case 12: // MethodDeclarations: MethodDeclarations MethodDeclaration
-#line 126 "parser.yy"
+#line 128 "parser.yy"
                                          {
         yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > ();
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 753 "parser.tab.cc"
+#line 763 "parser.tab.cc"
     break;
 
   case 13: // MethodDeclaration: PUBLIC Type IDENTIFIER LPAREN FormalParameters RPAREN LBRACE BlockStatements RETURN expression SEMICOLON RBRACE
-#line 133 "parser.yy"
+#line 135 "parser.yy"
                                                                                                                     {
         yylhs.value.as < Node* > () = new Node("MethodDeclaration", *yystack_[9].value.as < std::string* > (), yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[10].value.as < Node* > ()); // return type
@@ -762,277 +772,395 @@ namespace yy {
         yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // return expression
         delete yystack_[9].value.as < std::string* > ();
     }
-#line 766 "parser.tab.cc"
+#line 776 "parser.tab.cc"
     break;
 
   case 14: // FormalParameters: %empty
-#line 144 "parser.yy"
+#line 146 "parser.yy"
                 {
         yylhs.value.as < Node* > () = new Node("FormalParameters", "", yylineno);
     }
-#line 774 "parser.tab.cc"
+#line 784 "parser.tab.cc"
     break;
 
   case 15: // FormalParameters: FormalParameterList
-#line 147 "parser.yy"
+#line 149 "parser.yy"
                         {
         yylhs.value.as < Node* > () = yystack_[0].value.as < Node* > ();
     }
-#line 782 "parser.tab.cc"
+#line 792 "parser.tab.cc"
     break;
 
   case 16: // FormalParameterList: FormalParameter
-#line 153 "parser.yy"
+#line 155 "parser.yy"
                     {
         yylhs.value.as < Node* > () = new Node("FormalParameterList", "", yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 791 "parser.tab.cc"
+#line 801 "parser.tab.cc"
     break;
 
   case 17: // FormalParameterList: FormalParameterList COMMA FormalParameter
-#line 157 "parser.yy"
+#line 159 "parser.yy"
                                               {
         yylhs.value.as < Node* > () = yystack_[2].value.as < Node* > ();
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 800 "parser.tab.cc"
+#line 810 "parser.tab.cc"
     break;
 
   case 18: // FormalParameter: Type IDENTIFIER
-#line 164 "parser.yy"
+#line 166 "parser.yy"
                     {
         yylhs.value.as < Node* > () = new Node("FormalParameter", *yystack_[0].value.as < std::string* > (), yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ()); // type
         delete yystack_[0].value.as < std::string* > ();
     }
-#line 810 "parser.tab.cc"
+#line 820 "parser.tab.cc"
     break;
 
   case 19: // BlockStatements: %empty
-#line 172 "parser.yy"
+#line 174 "parser.yy"
                 {
         yylhs.value.as < Node* > () = new Node("BlockStatements", "", yylineno);
     }
-#line 818 "parser.tab.cc"
+#line 828 "parser.tab.cc"
     break;
 
   case 20: // BlockStatements: BlockStatements BlockStatement
-#line 175 "parser.yy"
+#line 177 "parser.yy"
                                    {
         yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > ();
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 827 "parser.tab.cc"
+#line 837 "parser.tab.cc"
     break;
 
   case 21: // BlockStatement: VarDeclaration
-#line 182 "parser.yy"
+#line 184 "parser.yy"
                    {
         yylhs.value.as < Node* > () = yystack_[0].value.as < Node* > ();
     }
-#line 835 "parser.tab.cc"
+#line 845 "parser.tab.cc"
     break;
 
   case 22: // BlockStatement: Statement
-#line 185 "parser.yy"
+#line 187 "parser.yy"
               {
         yylhs.value.as < Node* > () = yystack_[0].value.as < Node* > ();
     }
-#line 843 "parser.tab.cc"
+#line 853 "parser.tab.cc"
     break;
 
   case 23: // StatementList: %empty
-#line 191 "parser.yy"
+#line 193 "parser.yy"
                 {
         yylhs.value.as < Node* > () = new Node("StatementList", "", yylineno);
     }
-#line 851 "parser.tab.cc"
+#line 861 "parser.tab.cc"
     break;
 
   case 24: // StatementList: StatementList Statement
-#line 194 "parser.yy"
+#line 196 "parser.yy"
                             {
         yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > ();
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
-#line 860 "parser.tab.cc"
+#line 870 "parser.tab.cc"
     break;
 
   case 25: // Statement: SYSTEMDOTOUTDOTPRINTLN LPAREN expression RPAREN SEMICOLON
-#line 201 "parser.yy"
+#line 203 "parser.yy"
                                                               {
         yylhs.value.as < Node* > () = new Node("PrintStatement", "", yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
     }
-#line 869 "parser.tab.cc"
+#line 879 "parser.tab.cc"
     break;
 
   case 26: // Statement: IDENTIFIER ASSIGN expression SEMICOLON
-#line 205 "parser.yy"
+#line 207 "parser.yy"
                                            {
         yylhs.value.as < Node* > () = new Node("AssignStatement", *yystack_[3].value.as < std::string* > (), yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ());
         delete yystack_[3].value.as < std::string* > ();
     }
-#line 879 "parser.tab.cc"
+#line 889 "parser.tab.cc"
     break;
 
-  case 27: // Statement: IF LPAREN expression RPAREN Statement ELSE Statement
-#line 210 "parser.yy"
+  case 27: // Statement: IF LPAREN expression RPAREN Statement
+#line 212 "parser.yy"
+                                          {
+        yylhs.value.as < Node* > () = new Node("IfStatement", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // condition
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ()); // true branch
+    }
+#line 899 "parser.tab.cc"
+    break;
+
+  case 28: // Statement: IF LPAREN expression RPAREN Statement ELSE Statement
+#line 217 "parser.yy"
                                                          {
         yylhs.value.as < Node* > () = new Node("IfStatement", "", yylineno);
         yylhs.value.as < Node* > ()->children.push_back(yystack_[4].value.as < Node* > ()); // condition
         yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // true branch
         yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ()); // false branch
     }
-#line 890 "parser.tab.cc"
+#line 910 "parser.tab.cc"
     break;
 
-  case 28: // Statement: SEMICOLON
-#line 216 "parser.yy"
+  case 29: // Statement: WHILE LPAREN expression RPAREN Statement
+#line 223 "parser.yy"
+                                             {
+        yylhs.value.as < Node* > () = new Node("WhileStatement", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ()); // condition
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ()); // loop body
+    }
+#line 920 "parser.tab.cc"
+    break;
+
+  case 30: // Statement: LBRACE StatementList RBRACE
+#line 228 "parser.yy"
+                                {
+        yylhs.value.as < Node* > () = new Node("Block", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ());
+    }
+#line 929 "parser.tab.cc"
+    break;
+
+  case 31: // Statement: SEMICOLON
+#line 232 "parser.yy"
               {
         yylhs.value.as < Node* > () = new Node("EmptyStatement", ";", yylineno);
     }
-#line 898 "parser.tab.cc"
+#line 937 "parser.tab.cc"
     break;
 
-  case 29: // Type: INT LBRACK RBRACK
-#line 222 "parser.yy"
+  case 32: // Type: INT LBRACK RBRACK
+#line 238 "parser.yy"
                       {
         yylhs.value.as < Node* > () = new Node("Type", "int[]", yylineno);
     }
-#line 906 "parser.tab.cc"
+#line 945 "parser.tab.cc"
     break;
 
-  case 30: // Type: BOOLEAN
-#line 225 "parser.yy"
+  case 33: // Type: BOOLEAN
+#line 241 "parser.yy"
             {
         yylhs.value.as < Node* > () = new Node("Type", "boolean", yylineno);
     }
-#line 914 "parser.tab.cc"
+#line 953 "parser.tab.cc"
     break;
 
-  case 31: // Type: INT
-#line 228 "parser.yy"
+  case 34: // Type: INT
+#line 244 "parser.yy"
         {
         yylhs.value.as < Node* > () = new Node("Type", "int", yylineno);
-    }
-#line 922 "parser.tab.cc"
-    break;
-
-  case 32: // Type: IDENTIFIER
-#line 231 "parser.yy"
-               {
-        yylhs.value.as < Node* > () = new Node("Type", *yystack_[0].value.as < std::string* > (), yylineno);
-        delete yystack_[0].value.as < std::string* > ();
-    }
-#line 931 "parser.tab.cc"
-    break;
-
-  case 33: // expression: expression PLUSOP expression
-#line 238 "parser.yy"
-                                 {
-        yylhs.value.as < Node* > () = new Node("AddExpression", "", yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
-    }
-#line 941 "parser.tab.cc"
-    break;
-
-  case 34: // expression: expression MINUSOP expression
-#line 243 "parser.yy"
-                                  {
-        yylhs.value.as < Node* > () = new Node("SubExpression", "", yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
-    }
-#line 951 "parser.tab.cc"
-    break;
-
-  case 35: // expression: expression MULTOP expression
-#line 248 "parser.yy"
-                                 {
-        yylhs.value.as < Node* > () = new Node("MultExpression", "", yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
     }
 #line 961 "parser.tab.cc"
     break;
 
-  case 36: // expression: NEW IDENTIFIER LPAREN RPAREN
-#line 253 "parser.yy"
-                                 {
-        yylhs.value.as < Node* > () = new Node("NewObject", *yystack_[2].value.as < std::string* > (), yylineno);
-        delete yystack_[2].value.as < std::string* > ();
+  case 35: // Type: IDENTIFIER
+#line 247 "parser.yy"
+               {
+        yylhs.value.as < Node* > () = new Node("Type", *yystack_[0].value.as < std::string* > (), yylineno);
+        delete yystack_[0].value.as < std::string* > ();
     }
 #line 970 "parser.tab.cc"
     break;
 
-  case 37: // expression: expression DOT IDENTIFIER LPAREN RPAREN
-#line 257 "parser.yy"
-                                            {
+  case 36: // postfix: factor
+#line 254 "parser.yy"
+           { yylhs.value.as < Node* > () = yystack_[0].value.as < Node* > (); }
+#line 976 "parser.tab.cc"
+    break;
+
+  case 37: // postfix: postfix DOT IDENTIFIER LPAREN RPAREN
+#line 255 "parser.yy"
+                                         {
         yylhs.value.as < Node* > () = new Node("MethodCall", *yystack_[2].value.as < std::string* > (), yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[4].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[4].value.as < Node* > ()); // object or expression
         delete yystack_[2].value.as < std::string* > ();
     }
-#line 980 "parser.tab.cc"
+#line 986 "parser.tab.cc"
     break;
 
-  case 38: // expression: expression DOT IDENTIFIER LPAREN expression RPAREN
-#line 262 "parser.yy"
-                                                       {
+  case 38: // postfix: postfix DOT IDENTIFIER LPAREN ExpressionList RPAREN
+#line 260 "parser.yy"
+                                                        {
         yylhs.value.as < Node* > () = new Node("MethodCall", *yystack_[3].value.as < std::string* > (), yylineno);
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[5].value.as < Node* > ());
-        yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[5].value.as < Node* > ()); // object
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ()); // argument
         delete yystack_[3].value.as < std::string* > ();
     }
-#line 991 "parser.tab.cc"
+#line 997 "parser.tab.cc"
     break;
 
-  case 39: // expression: factor
-#line 268 "parser.yy"
-           {
-        yylhs.value.as < Node* > () = yystack_[0].value.as < Node* > ();
+  case 39: // postfix: postfix DOT LENGTH
+#line 266 "parser.yy"
+                       {
+        yylhs.value.as < Node* > () = new Node("ArrayLength", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
     }
-#line 999 "parser.tab.cc"
+#line 1006 "parser.tab.cc"
     break;
 
-  case 40: // factor: INTEGER
-#line 274 "parser.yy"
-            {
-        yylhs.value.as < Node* > () = new Node("Int", std::to_string(yystack_[0].value.as < int > ()), yylineno);
-    }
-#line 1007 "parser.tab.cc"
-    break;
-
-  case 41: // factor: IDENTIFIER
-#line 277 "parser.yy"
-               {
-        yylhs.value.as < Node* > () = new Node("Identifier", *yystack_[0].value.as < std::string* > (), yylineno);
-        delete yystack_[0].value.as < std::string* > ();
+  case 40: // postfix: postfix LBRACK expression RBRACK
+#line 270 "parser.yy"
+                                     {
+        yylhs.value.as < Node* > () = new Node("ArrayAccess", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[3].value.as < Node* > ()); // array
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[1].value.as < Node* > ()); // index
     }
 #line 1016 "parser.tab.cc"
     break;
 
-  case 42: // factor: THIS
-#line 281 "parser.yy"
+  case 41: // expression: expression PLUS expression
+#line 278 "parser.yy"
+                               {
+        yylhs.value.as < Node* > () = new Node("AddExpression", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1026 "parser.tab.cc"
+    break;
+
+  case 42: // expression: expression MINUS expression
+#line 283 "parser.yy"
+                                {
+        yylhs.value.as < Node* > () = new Node("SubExpression", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1036 "parser.tab.cc"
+    break;
+
+  case 43: // expression: expression TIMES expression
+#line 288 "parser.yy"
+                                {
+        yylhs.value.as < Node* > () = new Node("MultExpression", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1046 "parser.tab.cc"
+    break;
+
+  case 44: // expression: expression LT expression
+#line 293 "parser.yy"
+                             {
+        yylhs.value.as < Node* > () = new Node("LessThan", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1056 "parser.tab.cc"
+    break;
+
+  case 45: // expression: expression GT expression
+#line 298 "parser.yy"
+                             {
+        yylhs.value.as < Node* > () = new Node("GreaterThan", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1066 "parser.tab.cc"
+    break;
+
+  case 46: // expression: expression EQ expression
+#line 303 "parser.yy"
+                             {
+        yylhs.value.as < Node* > () = new Node("Equals", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[2].value.as < Node* > ());
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1076 "parser.tab.cc"
+    break;
+
+  case 47: // expression: postfix
+#line 308 "parser.yy"
+            {
+        yylhs.value.as < Node* > () = yystack_[0].value.as < Node* > ();
+    }
+#line 1084 "parser.tab.cc"
+    break;
+
+  case 48: // ExpressionList: expression
+#line 314 "parser.yy"
+               {
+        yylhs.value.as < Node* > () = new Node("Arguments", "", yylineno);
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1093 "parser.tab.cc"
+    break;
+
+  case 49: // ExpressionList: ExpressionList COMMA expression
+#line 318 "parser.yy"
+                                    {
+        yylhs.value.as < Node* > () = yystack_[2].value.as < Node* > ();
+        yylhs.value.as < Node* > ()->children.push_back(yystack_[0].value.as < Node* > ());
+    }
+#line 1102 "parser.tab.cc"
+    break;
+
+  case 50: // factor: INTEGER
+#line 325 "parser.yy"
+            {
+        yylhs.value.as < Node* > () = new Node("Int", std::to_string(yystack_[0].value.as < int > ()), yylineno);
+    }
+#line 1110 "parser.tab.cc"
+    break;
+
+  case 51: // factor: IDENTIFIER
+#line 328 "parser.yy"
+               {
+        yylhs.value.as < Node* > () = new Node("Identifier", *yystack_[0].value.as < std::string* > (), yylineno);
+        delete yystack_[0].value.as < std::string* > ();
+    }
+#line 1119 "parser.tab.cc"
+    break;
+
+  case 52: // factor: TRUE
+#line 332 "parser.yy"
+         {
+        yylhs.value.as < Node* > () = new Node("BooleanLiteral", "true", yylineno);
+    }
+#line 1127 "parser.tab.cc"
+    break;
+
+  case 53: // factor: FALSE
+#line 335 "parser.yy"
+          {
+        yylhs.value.as < Node* > () = new Node("BooleanLiteral", "false", yylineno);
+    }
+#line 1135 "parser.tab.cc"
+    break;
+
+  case 54: // factor: THIS
+#line 338 "parser.yy"
          {
         yylhs.value.as < Node* > () = new Node("This", "this", yylineno);
     }
-#line 1024 "parser.tab.cc"
+#line 1143 "parser.tab.cc"
     break;
 
-  case 43: // factor: LPAREN expression RPAREN
-#line 284 "parser.yy"
+  case 55: // factor: NEW IDENTIFIER LPAREN RPAREN
+#line 341 "parser.yy"
+                                 {
+        yylhs.value.as < Node* > () = new Node("NewObject", *yystack_[2].value.as < std::string* > (), yylineno);
+        delete yystack_[2].value.as < std::string* > ();
+    }
+#line 1152 "parser.tab.cc"
+    break;
+
+  case 56: // factor: LPAREN expression RPAREN
+#line 345 "parser.yy"
                              {
         yylhs.value.as < Node* > () = yystack_[1].value.as < Node* > ();
     }
-#line 1032 "parser.tab.cc"
+#line 1160 "parser.tab.cc"
     break;
 
 
-#line 1036 "parser.tab.cc"
+#line 1164 "parser.tab.cc"
 
             default:
               break;
@@ -1380,118 +1508,135 @@ namespace yy {
   }
 
 
-  const signed char parser::yypact_ninf_ = -53;
+  const signed char parser::yypact_ninf_ = -66;
 
   const signed char parser::yytable_ninf_ = -1;
 
-  const signed char
+  const short
   parser::yypact_[] =
   {
-      12,    16,    27,   -53,   -53,    19,   -53,    24,   -10,    28,
-     -53,    25,     1,    34,   -53,    38,    -5,    39,    32,   -53,
-     -53,   -53,    33,    67,    42,    44,    -5,   -53,   -53,    40,
-      68,   -53,    73,   -53,    55,    54,    58,    -5,    83,    59,
-      53,   -53,    87,    61,    62,    -5,   -53,    64,   -53,   -53,
-     -53,    15,    21,    69,    70,    72,    56,   -53,   -53,   -53,
-     -53,    70,    71,   -53,    56,    56,    56,   -53,   -53,   -53,
-      96,    56,    -2,   -53,   -53,     4,     7,    11,    75,    14,
-      56,    56,    56,    74,    98,    76,   -53,    57,    77,   -53,
-       0,     0,    78,   -53,    79,   -53,    92,   -53,    50,    57,
-     -53,    17,   -53,   -53
+       0,    19,    35,   -66,   -66,    25,   -66,    36,     4,    31,
+     -66,    40,    16,    49,   -66,    60,    29,    61,    42,   -66,
+     -66,   -66,    -6,    67,    52,    55,    29,   -66,   -66,    46,
+      85,   -66,    80,   -66,    79,    89,    82,    29,   108,    90,
+      75,   -66,   119,    91,    99,    29,   -66,   100,   -66,   -66,
+     -66,    -3,     1,   103,    96,   104,   113,    63,   -66,   -66,
+     -66,   -66,   -66,    96,   102,   -66,    63,    63,    63,    63,
+     -66,   -66,   -66,   143,   -66,   -66,    63,    30,    66,   -66,
+      13,   -66,    81,    74,    93,   105,   115,   117,    63,     6,
+      63,    63,    63,    63,    63,    63,   114,   -66,   112,   -66,
+      51,    51,   124,   -66,   129,   126,   -66,    50,    50,    50,
+     139,   139,   139,   -66,   -66,   147,   -66,   -66,   -66,    41,
+      51,   -66,   139,   -31,   -66,   -66,    63,   139
   };
 
   const signed char
   parser::yydefact_[] =
   {
        0,     0,     0,     2,     5,     0,     1,     3,     0,     0,
-       6,     0,     0,     0,     8,     0,    11,     0,    31,    32,
-      30,     9,     0,     0,     0,     0,     0,     7,    12,     0,
-       0,    29,     0,    10,     0,     0,     0,    14,     0,     0,
+       6,     0,     0,     0,     8,     0,    11,     0,    34,    35,
+      33,     9,     0,     0,     0,     0,     0,     7,    12,     0,
+       0,    32,     0,    10,     0,     0,     0,    14,     0,     0,
       15,    16,     0,     0,     0,     0,    18,     0,    19,    17,
-      23,     0,     0,     0,    32,     0,     0,    28,    21,    20,
-      22,     0,     0,    24,     0,     0,     0,    40,    41,    42,
-       0,     0,     0,    39,     4,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    26,     0,     0,    43,
-      33,    34,    35,    13,     0,    25,     0,    36,     0,     0,
-      37,     0,    27,    38
+      23,     0,     0,     0,    35,     0,     0,     0,    23,    31,
+      21,    20,    22,     0,     0,    24,     0,     0,     0,     0,
+      50,    51,    54,     0,    52,    53,     0,    47,     0,    36,
+       0,     4,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    30,     0,    26,
+       0,     0,     0,    56,     0,     0,    39,    46,    44,    45,
+      41,    42,    43,    13,    25,    27,    29,    55,    40,     0,
+       0,    37,    48,     0,    28,    38,     0,    49
   };
 
-  const signed char
+  const short
   parser::yypgoto_[] =
   {
-     -53,   -53,   -53,   -53,   -53,   -53,   -53,    80,   -53,   -53,
-     -53,   -53,    81,   -53,   -53,   -53,   -52,    65,     6,   -53
+     -66,   -66,   -66,   -66,   -66,   -66,   -66,   125,   -66,   -66,
+     -66,   -66,   130,   -66,   -66,   120,   -51,    34,   -66,   -65,
+     -66,   -66
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
        0,     2,     3,     4,     7,    10,    16,    21,    22,    28,
-      39,    40,    41,    51,    59,    52,    60,    23,    72,    73
+      39,    40,    41,    51,    61,    52,    65,    23,    77,    78,
+     123,    79
   };
 
   const signed char
   parser::yytable_[] =
   {
-      63,    80,    81,    82,    18,    82,    19,    80,    81,    82,
-      80,    81,    82,    20,    80,    81,    82,    80,    81,    82,
-      80,    81,    82,    53,    18,     1,    54,     6,     5,    53,
-       8,    11,    61,    20,    55,    96,     9,    56,    13,    12,
-      55,    83,    14,    84,    85,    84,    26,   102,    15,    84,
-      86,    87,    84,    17,    89,    24,    84,   103,    57,    84,
-      67,    68,    84,    62,    57,    53,    67,    68,    61,    25,
-      75,    76,    77,    69,    70,    27,    55,    79,    29,    69,
-      70,    30,    31,    33,    35,    34,    90,    91,    92,    71,
-     100,    32,    36,    37,    43,    71,    38,    45,    46,    44,
-      57,    47,    42,    48,   101,    50,    65,    78,    64,    94,
-      42,    66,    99,    74,    88,     0,    93,    97,    98,    95,
-       0,     0,     0,    84,     0,     0,    49,     0,     0,     0,
-       0,    58
+      62,    82,    83,    84,    85,    53,    18,    26,    54,    53,
+     125,    87,    63,     1,   126,    20,    55,   105,    56,    57,
+      55,    53,    56,   104,    63,   107,   108,   109,   110,   111,
+     112,     5,    55,   106,    56,     6,     8,    27,    18,    58,
+      19,    59,    12,    58,    64,    59,    11,    20,     9,   115,
+     116,    70,    71,    13,   122,    58,    97,    59,    14,    53,
+      32,   127,    63,    15,    72,    73,    74,    75,    88,   124,
+      55,    42,    56,    70,    71,    17,    89,    24,    29,    42,
+      25,    76,   121,    93,    94,    95,    72,    73,    74,    75,
+      33,    35,    30,    58,    31,    59,    90,    91,    92,    93,
+      94,    95,    34,    76,    90,    91,    92,    93,    94,    95,
+      96,    90,    91,    92,    93,    94,    95,    36,    99,    43,
+      45,    38,    98,    90,    91,    92,    93,    94,    95,    37,
+      46,    44,    47,    67,   100,    90,    91,    92,    93,    94,
+      95,    48,    50,    66,    68,    81,   101,    90,    91,    92,
+      93,    94,    95,    69,    86,   102,   114,   113,   103,    90,
+      91,    92,    93,    94,    95,   117,   119,   120,   118,    90,
+      91,    92,    93,    94,    95,    49,    60,     0,    80
   };
 
   const signed char
   parser::yycheck_[] =
   {
-      52,     3,     4,     5,     9,     5,    11,     3,     4,     5,
-       3,     4,     5,    18,     3,     4,     5,     3,     4,     5,
-       3,     4,     5,     8,     9,    13,    11,     0,    12,     8,
-      11,    41,    11,    18,    19,    87,    12,    22,    13,    11,
-      19,    43,    41,    45,    40,    45,    13,    99,    14,    45,
-      43,    40,    45,    15,    40,    16,    45,    40,    43,    45,
-      10,    11,    45,    42,    43,     8,    10,    11,    11,    37,
-      64,    65,    66,    23,    24,    42,    19,    71,    11,    23,
-      24,    39,    38,    43,    11,    17,    80,    81,    82,    39,
-      40,    26,    37,    39,    11,    39,    38,    44,    11,    40,
-      43,    40,    37,    41,    98,    41,    36,    11,    39,    11,
-      45,    39,    20,    42,    39,    -1,    42,    40,    39,    43,
-      -1,    -1,    -1,    45,    -1,    -1,    45,    -1,    -1,    -1,
-      -1,    51
+      51,    66,    67,    68,    69,     8,     9,    13,    11,     8,
+      41,    76,    11,    13,    45,    18,    19,    11,    21,    22,
+      19,     8,    21,    88,    11,    90,    91,    92,    93,    94,
+      95,    12,    19,    27,    21,     0,    11,    43,     9,    42,
+      11,    44,    11,    42,    43,    44,    42,    18,    12,   100,
+     101,    10,    11,    13,   119,    42,    43,    44,    42,     8,
+      26,   126,    11,    14,    23,    24,    25,    26,    38,   120,
+      19,    37,    21,    10,    11,    15,    46,    16,    11,    45,
+      38,    40,    41,    33,    34,    35,    23,    24,    25,    26,
+      44,    11,    40,    42,    39,    44,    30,    31,    32,    33,
+      34,    35,    17,    40,    30,    31,    32,    33,    34,    35,
+      44,    30,    31,    32,    33,    34,    35,    38,    44,    11,
+      45,    39,    41,    30,    31,    32,    33,    34,    35,    40,
+      11,    41,    41,    37,    41,    30,    31,    32,    33,    34,
+      35,    42,    42,    40,    40,    43,    41,    30,    31,    32,
+      33,    34,    35,    40,    11,    40,    44,    43,    41,    30,
+      31,    32,    33,    34,    35,    41,    40,    20,    39,    30,
+      31,    32,    33,    34,    35,    45,    51,    -1,    58
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,    13,    47,    48,    49,    12,     0,    50,    11,    12,
-      51,    41,    11,    13,    41,    14,    52,    15,     9,    11,
-      18,    53,    54,    63,    16,    37,    13,    42,    55,    11,
-      39,    38,    63,    43,    17,    11,    37,    39,    38,    56,
-      57,    58,    63,    11,    40,    44,    11,    40,    41,    58,
-      41,    59,    61,     8,    11,    19,    22,    43,    53,    60,
-      62,    11,    42,    62,    39,    36,    39,    10,    11,    23,
-      24,    39,    64,    65,    42,    64,    64,    64,    11,    64,
-       3,     4,     5,    43,    45,    40,    43,    40,    39,    40,
-      64,    64,    64,    42,    11,    43,    62,    40,    39,    20,
-      40,    64,    62,    40
+       0,    13,    48,    49,    50,    12,     0,    51,    11,    12,
+      52,    42,    11,    13,    42,    14,    53,    15,     9,    11,
+      18,    54,    55,    64,    16,    38,    13,    43,    56,    11,
+      40,    39,    64,    44,    17,    11,    38,    40,    39,    57,
+      58,    59,    64,    11,    41,    45,    11,    41,    42,    59,
+      42,    60,    62,     8,    11,    19,    21,    22,    42,    44,
+      54,    61,    63,    11,    43,    63,    40,    37,    40,    40,
+      10,    11,    23,    24,    25,    26,    40,    65,    66,    68,
+      62,    43,    66,    66,    66,    66,    11,    66,    38,    46,
+      30,    31,    32,    33,    34,    35,    44,    43,    41,    44,
+      41,    41,    40,    41,    66,    11,    27,    66,    66,    66,
+      66,    66,    66,    43,    44,    63,    63,    41,    39,    40,
+      20,    41,    66,    67,    63,    41,    45,    66
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    46,    47,    48,    49,    50,    50,    51,    52,    52,
-      53,    54,    54,    55,    56,    56,    57,    57,    58,    59,
-      59,    60,    60,    61,    61,    62,    62,    62,    62,    63,
-      63,    63,    63,    64,    64,    64,    64,    64,    64,    64,
-      65,    65,    65,    65
+       0,    47,    48,    49,    50,    51,    51,    52,    53,    53,
+      54,    55,    55,    56,    57,    57,    58,    58,    59,    60,
+      60,    61,    61,    62,    62,    63,    63,    63,    63,    63,
+      63,    63,    64,    64,    64,    64,    65,    65,    65,    65,
+      65,    66,    66,    66,    66,    66,    66,    66,    67,    67,
+      68,    68,    68,    68,    68,    68,    68
   };
 
   const signed char
@@ -1499,9 +1644,10 @@ namespace yy {
   {
        0,     2,     1,     2,    18,     0,     2,     6,     0,     2,
        3,     0,     2,    12,     0,     1,     1,     3,     2,     0,
-       2,     1,     1,     0,     2,     5,     4,     7,     1,     3,
-       1,     1,     1,     3,     3,     3,     4,     5,     6,     1,
-       1,     1,     1,     3
+       2,     1,     1,     0,     2,     5,     4,     5,     7,     5,
+       3,     1,     3,     1,     1,     1,     1,     5,     6,     3,
+       4,     3,     3,     3,     3,     3,     3,     1,     1,     3,
+       1,     1,     1,     1,     1,     4,     3
   };
 
 
@@ -1515,14 +1661,14 @@ namespace yy {
   "MULTOP", "LP", "RP", "SYSTEMDOTOUTDOTPRINTLN", "INT", "INTEGER",
   "IDENTIFIER", "CLASS", "PUBLIC", "STATIC", "VOID", "MAIN", "STRING",
   "BOOLEAN", "IF", "ELSE", "WHILE", "RETURN", "THIS", "NEW", "TRUE",
-  "FALSE", "AND", "OR", "EQ", "LT", "GT", "PLUS", "MINUS", "TIMES", "NOT",
-  "ASSIGN", "LBRACK", "RBRACK", "LPAREN", "RPAREN", "LBRACE", "RBRACE",
-  "SEMICOLON", "COMMA", "DOT", "$accept", "root", "Goal", "MainClass",
-  "ClassDeclarations", "ClassDeclaration", "VarDeclarations",
-  "VarDeclaration", "MethodDeclarations", "MethodDeclaration",
-  "FormalParameters", "FormalParameterList", "FormalParameter",
-  "BlockStatements", "BlockStatement", "StatementList", "Statement",
-  "Type", "expression", "factor", YY_NULLPTR
+  "FALSE", "LENGTH", "AND", "OR", "EQ", "LT", "GT", "PLUS", "MINUS",
+  "TIMES", "NOT", "ASSIGN", "LBRACK", "RBRACK", "LPAREN", "RPAREN",
+  "LBRACE", "RBRACE", "SEMICOLON", "COMMA", "DOT", "$accept", "root",
+  "Goal", "MainClass", "ClassDeclarations", "ClassDeclaration",
+  "VarDeclarations", "VarDeclaration", "MethodDeclarations",
+  "MethodDeclaration", "FormalParameters", "FormalParameterList",
+  "FormalParameter", "BlockStatements", "BlockStatement", "StatementList",
+  "Statement", "Type", "postfix", "expression", "ExpressionList", "factor", YY_NULLPTR
   };
 #endif
 
@@ -1531,11 +1677,12 @@ namespace yy {
   const short
   parser::yyrline_[] =
   {
-       0,    63,    63,    69,    77,    86,    89,    96,   105,   108,
-     115,   123,   126,   133,   144,   147,   153,   157,   164,   172,
-     175,   182,   185,   191,   194,   201,   205,   210,   216,   222,
-     225,   228,   231,   238,   243,   248,   253,   257,   262,   268,
-     274,   277,   281,   284
+       0,    65,    65,    71,    79,    88,    91,    98,   107,   110,
+     117,   125,   128,   135,   146,   149,   155,   159,   166,   174,
+     177,   184,   187,   193,   196,   203,   207,   212,   217,   223,
+     228,   232,   238,   241,   244,   247,   254,   255,   260,   266,
+     270,   278,   283,   288,   293,   298,   303,   308,   314,   318,
+     325,   328,   332,   335,   338,   341,   345
   };
 
   void
@@ -1567,8 +1714,8 @@ namespace yy {
 
 
 } // yy
-#line 1571 "parser.tab.cc"
+#line 1718 "parser.tab.cc"
 
-#line 290 "parser.yy"
+#line 351 "parser.yy"
 
 

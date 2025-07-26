@@ -35,6 +35,8 @@ int lexical_errors = 0;
 "new"                               { return USE_LEX_ONLY ? (printf("NEW\n"), yylex()) : yy::parser::make_NEW(); }
 "true"                              { return USE_LEX_ONLY ? (printf("TRUE\n"), yylex()) : yy::parser::make_TRUE(); }
 "false"                             { return USE_LEX_ONLY ? (printf("FALSE\n"), yylex()) : yy::parser::make_FALSE(); }
+"length"                            { return USE_LEX_ONLY ? (printf("LENGTH\n"), yylex()) : yy::parser::make_LENGTH(); }
+
 
 "&&"                                { return USE_LEX_ONLY ? (printf("AND\n"), yylex()) : yy::parser::make_AND(); }
 "||"                                { return USE_LEX_ONLY ? (printf("OR\n"), yylex()) : yy::parser::make_OR(); }

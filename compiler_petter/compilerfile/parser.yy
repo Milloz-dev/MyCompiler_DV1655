@@ -38,16 +38,17 @@
 %token END 0 "end of file"
 
 /* MiniJava keywords and symbols */
-%token CLASS PUBLIC STATIC VOID MAIN STRING BOOLEAN IF ELSE WHILE RETURN THIS NEW TRUE FALSE
+%token CLASS PUBLIC STATIC VOID MAIN STRING BOOLEAN IF ELSE WHILE RETURN THIS NEW TRUE FALSE LENGTH
 %token AND OR EQ LT GT PLUS MINUS TIMES NOT ASSIGN
 %token LBRACK RBRACK LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA DOT
 
 /* Precedence and associativity */
+%left EQ LT GT
 %left PLUSOP MINUSOP
 %left MULTOP
 
 /* Types for non-terminals */
-%type <Node*> root expression factor
+%type <Node*> root expression factor postfix
 %type <Node*> Goal MainClass Statement StatementList
 %type <Node*> ClassDeclarations ClassDeclaration
 %type <Node*> VarDeclarations VarDeclaration
@@ -55,6 +56,7 @@
 %type <Node*> Type
 %type <Node*> FormalParameters FormalParameterList FormalParameter
 %type <Node*> BlockStatements BlockStatement
+%type <Node*> ExpressionList
 
 
 /* Grammar rules section */
@@ -207,12 +209,26 @@ Statement:
         $$->children.push_back($3);
         delete $1;
     }
+  | IF LPAREN expression RPAREN Statement {
+        $$ = new Node("IfStatement", "", yylineno);
+        $$->children.push_back($3); // condition
+        $$->children.push_back($5); // true branch
+    }
   | IF LPAREN expression RPAREN Statement ELSE Statement {
         $$ = new Node("IfStatement", "", yylineno);
         $$->children.push_back($3); // condition
         $$->children.push_back($5); // true branch
         $$->children.push_back($7); // false branch
-    }                                               
+    }
+  | WHILE LPAREN expression RPAREN Statement {
+        $$ = new Node("WhileStatement", "", yylineno);
+        $$->children.push_back($3); // condition
+        $$->children.push_back($5); // loop body
+    }
+  | LBRACE StatementList RBRACE {
+        $$ = new Node("Block", "", yylineno);
+        $$->children.push_back($2);
+    }
   | SEMICOLON {
         $$ = new Node("EmptyStatement", ";", yylineno);
     }
@@ -234,39 +250,74 @@ Type:
     }
 ;
 
+postfix:
+    factor { $$ = $1; }
+  | postfix DOT IDENTIFIER LPAREN RPAREN {
+        $$ = new Node("MethodCall", *$3, yylineno);
+        $$->children.push_back($1); // object or expression
+        delete $3;
+    }
+  | postfix DOT IDENTIFIER LPAREN ExpressionList RPAREN {
+        $$ = new Node("MethodCall", *$3, yylineno);
+        $$->children.push_back($1); // object
+        $$->children.push_back($5); // argument
+        delete $3;
+    }
+  | postfix DOT LENGTH {
+        $$ = new Node("ArrayLength", "", yylineno);
+        $$->children.push_back($1);
+    }
+  | postfix LBRACK expression RBRACK {
+        $$ = new Node("ArrayAccess", "", yylineno);
+        $$->children.push_back($1); // array
+        $$->children.push_back($3); // index
+    }
+;
+
 expression:
-    expression PLUSOP expression {
+    expression PLUS expression {
         $$ = new Node("AddExpression", "", yylineno);
         $$->children.push_back($1);
         $$->children.push_back($3);
     }
-  | expression MINUSOP expression {
+  | expression MINUS expression {
         $$ = new Node("SubExpression", "", yylineno);
         $$->children.push_back($1);
         $$->children.push_back($3);
     }
-  | expression MULTOP expression {
+  | expression TIMES expression {
         $$ = new Node("MultExpression", "", yylineno);
         $$->children.push_back($1);
         $$->children.push_back($3);
     }
-  | NEW IDENTIFIER LPAREN RPAREN {
-        $$ = new Node("NewObject", *$2, yylineno);
-        delete $2;
-    }
-  | expression DOT IDENTIFIER LPAREN RPAREN {
-        $$ = new Node("MethodCall", *$3, yylineno);
+  | expression LT expression {
+        $$ = new Node("LessThan", "", yylineno);
         $$->children.push_back($1);
-        delete $3;
+        $$->children.push_back($3);
     }
-  | expression DOT IDENTIFIER LPAREN expression RPAREN {
-        $$ = new Node("MethodCall", *$3, yylineno);
+  | expression GT expression {
+        $$ = new Node("GreaterThan", "", yylineno);
         $$->children.push_back($1);
-        $$->children.push_back($5);
-        delete $3;
+        $$->children.push_back($3);
     }
-  | factor {
+  | expression EQ expression {
+        $$ = new Node("Equals", "", yylineno);
+        $$->children.push_back($1);
+        $$->children.push_back($3);
+    }
+  | postfix {
         $$ = $1;
+    }
+;
+
+ExpressionList:
+    expression {
+        $$ = new Node("Arguments", "", yylineno);
+        $$->children.push_back($1);
+    }
+  | ExpressionList COMMA expression {
+        $$ = $1;
+        $$->children.push_back($3);
     }
 ;
 
@@ -278,8 +329,18 @@ factor:
         $$ = new Node("Identifier", *$1, yylineno);
         delete $1;
     }
+  | TRUE {
+        $$ = new Node("BooleanLiteral", "true", yylineno);
+    }
+  | FALSE {
+        $$ = new Node("BooleanLiteral", "false", yylineno);
+    }
   | THIS {
         $$ = new Node("This", "this", yylineno);
+    }
+  | NEW IDENTIFIER LPAREN RPAREN {
+        $$ = new Node("NewObject", *$2, yylineno);
+        delete $2;
     }
   | LPAREN expression RPAREN {
         $$ = $2;
