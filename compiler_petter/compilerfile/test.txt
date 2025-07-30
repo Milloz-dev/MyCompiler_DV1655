@@ -7,6 +7,15 @@ public class BinarySearch{
 // methods to initialize, print and search the array
 // using Binary Search
 
+
+class Hello {
+  public static void main(String[] args) {
+    System.out.println(1 + 4 * 2);        // should print 9
+    System.out.println((1 + 4) * 2);      // should print 10
+    System.out.println(!false);           // should print true
+  }
+}
+
 class BS{
     int[] number ;
     int size ;

@@ -46,6 +46,7 @@
 %left EQ LT GT
 %left PLUSOP MINUSOP
 %left MULTOP
+%right NOT
 
 /* Types for non-terminals */
 %type <Node*> root expression factor postfix
@@ -304,6 +305,10 @@ expression:
         $$ = new Node("Equals", "", yylineno);
         $$->children.push_back($1);
         $$->children.push_back($3);
+    }
+  | NOT expression %prec NOT {
+        $$ = new Node("NotExpression", "", yylineno);
+        $$->children.push_back($2);
     }
   | postfix {
         $$ = $1;
